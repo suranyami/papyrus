@@ -16,6 +16,29 @@ stay alive. A NIF segfault kills the whole VM.
 
 ## Installation
 
+### Prerequisites (Debian/DietPi/Raspberry Pi OS)
+
+Before installing Erlang and Elixir via `mise`, install the build dependencies:
+
+```sh
+sudo apt install -y automake autoconf openssl libtool unixodbc fop \
+  libssl-dev libncurses-dev g++ make
+```
+
+Then install the ePaper C driver dependency:
+
+```sh
+sudo apt install -y liblgpio-dev
+```
+
+### Erlang & Elixir via mise
+
+```sh
+mise install
+```
+
+### Add to your project
+
 ```elixir
 # mix.exs
 def deps do
@@ -23,12 +46,6 @@ def deps do
     {:papyrus, "~> 0.1"}
   ]
 end
-```
-
-Requires `liblgpio-dev` on the Raspberry Pi:
-
-```sh
-sudo apt install liblgpio-dev
 ```
 
 ## Usage
