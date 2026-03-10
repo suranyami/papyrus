@@ -69,7 +69,6 @@ defmodule Papyrus.Display do
 
     port =
       Port.open({:spawn_executable, port_path}, [
-        {:packet, 0},
         :binary,
         :exit_status,
         :use_stdio
