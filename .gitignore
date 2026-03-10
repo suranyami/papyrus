@@ -1,0 +1,17 @@
+# Build artifacts
+/_build/
+/deps/
+/priv/epd_port
+
+# Mix
+*.ez
+erl_crash.dump
+
+# Editor
+.elixir_ls/
+.vscode/
+*.swp
+*~
+
+# macOS
+.DS_Store
