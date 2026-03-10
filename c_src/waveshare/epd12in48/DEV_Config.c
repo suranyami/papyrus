@@ -130,7 +130,7 @@ UBYTE DEV_ModuleInit(void)
 
     fp = popen("cat /proc/cpuinfo | grep 'Raspberry Pi 5'", "r");
     if (fp == NULL) {
-        printf("It is not possible to determine the model of the Raspberry PI\n");
+        fprintf(stderr, "It is not possible to determine the model of the Raspberry PI\n");
         return -1;
     }
 
@@ -139,7 +139,7 @@ UBYTE DEV_ModuleInit(void)
         GPIO_Handle = lgGpiochipOpen(4);
         if (GPIO_Handle < 0)
         {
-            printf( "gpiochip4 Export Failed\n");
+            fprintf(stderr, "gpiochip4 Export Failed\n");
             return -1;
         }
     }
@@ -148,7 +148,7 @@ UBYTE DEV_ModuleInit(void)
         GPIO_Handle = lgGpiochipOpen(0);
         if (GPIO_Handle < 0)
         {
-            printf( "gpiochip0 Export Failed\n");
+            fprintf(stderr, "gpiochip0 Export Failed\n");
             return -1;
         }
     }

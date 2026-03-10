@@ -463,7 +463,7 @@ static void EPD_M1_ReadTemperature(void)
     UBYTE temp;
     temp = DEV_SPI_ReadByte(0x00);    
     DEV_Digital_Write(EPD_M1_CS_PIN, 1); 
-    printf("Read Temperature Reg:%d\r\n", temp);
+    fprintf(stderr, "Read Temperature Reg:%d\r\n", temp);
     
     EPD_M1S1M2S2_SendCommand(0xe0);//Cascade setting
     EPD_M1S1M2S2_SendData(0x03);
