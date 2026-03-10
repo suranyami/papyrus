@@ -151,16 +151,25 @@ defmodule Papyrus.Display do
     receive do
       {port, {:data, data}} when port == state.port ->
         case Protocol.decode_response(data) do
-          {:ok, _} -> {:ok, state}
-          {:error, msg} -> {:error, msg}
-          :incomplete -> {:error, :incomplete_response}
+          {:ok, _} ->
+            {:ok, state}
+
+          {:error, msg} ->
+            {:error, "epd_port returned error for #{cmd}: #{msg}"}
+
+          :incomplete ->
+            {:error,
+             "epd_port sent a malformed or truncated response to #{cmd} — " <>
+               "check that the display is connected and the port binary is functioning correctly"}
         end
 
       {port, {:exit_status, code}} when port == state.port ->
-        {:error, {:port_exited, code}}
+        {:error,
+         "epd_port exited with status #{code} while handling #{cmd} — " <>
+           "check GPIO permissions (is the user in the gpio group?) and display wiring"}
     after
       30_000 ->
-        {:error, :timeout}
+        {:error, "epd_port timed out after 30s waiting for #{cmd} response"}
     end
   end
 
