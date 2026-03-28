@@ -147,10 +147,15 @@ defmodule Papyrus.Display do
   defp send_command(state, cmd, payload \\ <<>>) do
     request = Protocol.encode_request(cmd, payload)
     Port.command(state.port, request)
+    collect_response(state, cmd, <<>>)
+  end
 
+  defp collect_response(state, cmd, buffer) do
     receive do
-      {port, {:data, data}} when port == state.port ->
-        case Protocol.decode_response(data) do
+      {port, {:data, chunk}} when port == state.port ->
+        accumulated = buffer <> chunk
+
+        case Protocol.decode_response(accumulated) do
           {:ok, _} ->
             {:ok, state}
 
@@ -158,9 +163,7 @@ defmodule Papyrus.Display do
             {:error, "epd_port returned error for #{cmd}: #{msg}"}
 
           :incomplete ->
-            {:error,
-             "epd_port sent a malformed or truncated response to #{cmd} — " <>
-               "check that the display is connected and the port binary is functioning correctly"}
+            collect_response(state, cmd, accumulated)
         end
 
       {port, {:exit_status, code}} when port == state.port ->

@@ -18,17 +18,37 @@ stay alive. A NIF segfault kills the whole VM.
 
 ### Prerequisites (Debian/DietPi/Raspberry Pi OS)
 
+## Installation on Raspberry Pi
+
 Before installing Erlang and Elixir via `mise`, install the build dependencies:
 
 ```sh
-sudo apt install -y automake autoconf openssl libtool unixodbc fop \
-  libssl-dev libncurses-dev g++ make
+sudo apt update -y
+sudo apt install -y automake autoconf openssl libtool unixodbc fop  libssl-dev libncurses-dev g++ make build-essential erlang-dev
 ```
 
 Then install the ePaper C driver dependency:
 
 ```sh
 sudo apt install -y liblgpio-dev
+```
+
+### GPIO permissions
+
+lgpio accesses `/dev/gpiochip0` directly. On Raspberry Pi OS and DietPi, this
+device is owned by `root:gpio` with mode `660` — your user must be in the
+`gpio` group or the port process will fail with `gpiochip0 Export Failed`.
+
+```sh
+sudo usermod -a -G gpio $USER
+newgrp gpio   # apply in the current shell, or log out and back in
+```
+
+Verify with:
+
+```sh
+groups   # should include 'gpio'
+ls -la /dev/gpiochip0   # should show crw-rw---- ... root gpio
 ```
 
 ### Erlang & Elixir via mise

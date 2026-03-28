@@ -196,34 +196,63 @@ parameter:
 void EPD_12in48_Display(const UBYTE *Image)
 {
     int x,y;
-    //S1 part 648*492
+
+    /* Write old-frame register (0x10) as all-white so the LUT always has a
+     * clean white reference, regardless of what was in SRAM from a previous
+     * operation (e.g. waking from deep sleep). */
+    // S2 part 648*492 (top-left)
+    EPD_S2_SendCommand(0x10);
+    for(y = 0; y < 492; y++)
+        for(x = 0; x < 81; x++)
+            EPD_S2_SendData(0xff);
+
+    // M2 part 656*492 (top-right)
+    EPD_M2_SendCommand(0x10);
+    for(y = 0; y < 492; y++)
+        for(x = 81; x < 163; x++)
+            EPD_M2_SendData(0xff);
+
+    // S1 part 656*492 (bottom-right)
+    EPD_S1_SendCommand(0x10);
+    for(y = 492; y < 984; y++)
+        for(x = 81; x < 163; x++)
+            EPD_S1_SendData(0xff);
+
+    // M1 part 648*492 (bottom-left)
+    EPD_M1_SendCommand(0x10);
+    for(y = 492; y < 984; y++)
+        for(x = 0; x < 81; x++)
+            EPD_M1_SendData(0xff);
+
+    /* Write new-frame register (0x13) with the target image. */
+    // S2 part 648*492 (top-left)
     EPD_S2_SendCommand(0x13);
     for(y = 0; y < 492; y++)
         for(x = 0; x < 81; x++) {
             EPD_S2_SendData(*(Image + (y*163 + x)));
         }
 
-    //M2 part 656*492
+    // M2 part 656*492 (top-right)
     EPD_M2_SendCommand(0x13);
     for(y = 0; y < 492; y++)
         for(x = 81; x < 163; x++) {
             EPD_M2_SendData(*(Image+ (y*163) +x));
         }
 
-    //S1 part 656*492
+    // S1 part 656*492 (bottom-right)
     EPD_S1_SendCommand(0x13);
     for(y = 492; y < 984; y++)
         for(x = 81; x < 163; x++) {
             EPD_S1_SendData(*(Image+ (y*163) +x));
         }
 
-    //M1 part 648*492
+    // M1 part 648*492 (bottom-left)
     EPD_M1_SendCommand(0x13);
     for(y = 492; y < 984; y++)
         for(x = 0; x < 81; x++) {
             EPD_M1_SendData(*(Image+ (y*163) +x));
         }
-        
+
     EPD_12in48_TurnOnDisplay();
 }
 

@@ -302,5 +302,5 @@ void DEV_ModuleExit(void)
     DEV_Digital_Write(EPD_S2_CS_PIN, 1);
     DEV_Digital_Write(EPD_M1_CS_PIN, 1);
     DEV_Digital_Write(EPD_M2_CS_PIN, 1);
-    // lgGpiochipClose(GPIO_Handle);
+    lgGpiochipClose(GPIO_Handle);
 }
