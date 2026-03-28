@@ -1,11 +1,13 @@
 defmodule Papyrus.Displays.Waveshare12in48 do
   @moduledoc """
-  Display spec for the Waveshare 12.48\" black-and-white ePaper panel.
+  Display spec for the Waveshare 12.48\" B black/white/red ePaper panel (3-colour).
 
   - Resolution: 1304 × 984 pixels
-  - Buffer: 163 bytes/row × 984 rows = 160,392 bytes
-  - Each byte encodes 8 horizontal pixels; 1 = white, 0 = black
+  - Colour planes: black plane + red plane, each 163 bytes/row × 984 rows = 160,392 bytes
+  - Black plane: `0xFF` = white, `0x00` = black
+  - Red plane: `0x00` = no red (transparent), `0xFF` = red pixels
   - Four sub-panels: M1, S1, M2, S2 (handled transparently by the C driver)
+  - Hardware revisions: V1 (explicit LUT) and V2 (OTP waveform, default)
 
   ## Pin configuration
 
@@ -41,7 +43,7 @@ defmodule Papyrus.Displays.Waveshare12in48 do
       width: 1304,
       height: 984,
       buffer_size: 163 * 984,
-      color_mode: :black_white,
+      color_mode: :black_white_red,
       partial_refresh: false,
       pin_config: %{
         sck: 11, mosi: 10,

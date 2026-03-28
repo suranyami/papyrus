@@ -7,9 +7,18 @@
  *
  * Commands:
  *   0x01  init     (no payload)
- *   0x02  display  (160392-byte image buffer)
+ *   0x02  display  (2 × PLANE_SIZE bytes: black_plane then red_plane)
  *   0x03  clear    (no payload)
  *   0x04  sleep    (no payload)
+ *
+ * Display is the Waveshare 12.48" B (black/white/red, 3-colour).
+ * Buffer layout: 984 rows × 163 bytes/row = 160,392 bytes per colour plane.
+ * CMD_DISPLAY expects both planes concatenated: black_plane <> red_plane.
+ *
+ * Red plane encoding (Elixir side):
+ *   0x00 bytes = no red (white background)
+ *   0xFF bytes = red pixels
+ * The C driver inverts the red plane before sending it to the panel hardware.
  *****************************************************************************/
 
 #include <stdio.h>
@@ -19,7 +28,7 @@
 #include <unistd.h>
 #include <sys/select.h>
 
-#include "waveshare/epd12in48/EPD_12in48.h"
+#include "waveshare/epd12in48/EPD_12in48b.h"
 #include "waveshare/epd12in48/DEV_Config.h"
 
 #define CMD_INIT    0x01
@@ -27,9 +36,14 @@
 #define CMD_CLEAR   0x03
 #define CMD_SLEEP   0x04
 
-#define STDIN_POLL_TIMEOUT_SEC 1  /* select() timeout for stdin EOF detection */
+#define STDIN_POLL_TIMEOUT_SEC 1
 
-#define BUFFER_SIZE (163 * 984)  /* 160392 bytes */
+#define PLANE_SIZE      (163 * 984)          /* 160,392 bytes — one colour plane */
+#define DISPLAY_PAYLOAD (2 * PLANE_SIZE)     /* 320,784 bytes — black + red      */
+
+/* Hardware version: 1 = explicit LUT, 2 = OTP waveform (default).
+ * Change to 1 if you have an older V1 panel. */
+int Version = 2;
 
 /* ---------------------------------------------------------------------------
  * I/O helpers — read/write full buffers from/to stdin/stdout
@@ -93,7 +107,7 @@ int main(void) {
         return 1;
     }
 
-    uint8_t *image_buf = malloc(BUFFER_SIZE);
+    uint8_t *image_buf = malloc(DISPLAY_PAYLOAD);
     if (!image_buf) {
         send_error("malloc failed");
         return 1;
@@ -136,13 +150,12 @@ int main(void) {
                              |  (uint32_t)hdr[4];
 
         /* Read payload */
-        if (payload_len > BUFFER_SIZE) {
+        if (payload_len > DISPLAY_PAYLOAD) {
             send_error("payload too large");
             continue;
         }
-        uint8_t *payload = (payload_len > 0) ? image_buf : NULL;
         if (payload_len > 0) {
-            if (read_exact(payload, payload_len) != 0) {
+            if (read_exact(image_buf, payload_len) != 0) {
                 goto cleanup;
             }
         }
@@ -150,29 +163,29 @@ int main(void) {
         /* Dispatch */
         switch (cmd) {
             case CMD_INIT:
-                if (EPD_12in48_Init() == 0) {
+                if (EPD_12in48B_Init() == 0) {
                     send_ok("ok");
                 } else {
-                    send_error("EPD_12in48_Init failed");
+                    send_error("EPD_12in48B_Init failed");
                 }
                 break;
 
             case CMD_DISPLAY:
-                if (payload_len != BUFFER_SIZE) {
-                    send_error("display: wrong buffer size");
+                if (payload_len != DISPLAY_PAYLOAD) {
+                    send_error("display: expected 2 x plane_size bytes (black + red planes)");
                     break;
                 }
-                EPD_12in48_Display(payload);
+                EPD_12in48B_Display(image_buf, image_buf + PLANE_SIZE);
                 send_ok("ok");
                 break;
 
             case CMD_CLEAR:
-                EPD_12in48_Clear();
+                EPD_12in48B_Clear();
                 send_ok("ok");
                 break;
 
             case CMD_SLEEP:
-                EPD_12in48_Sleep();
+                EPD_12in48B_Sleep();
                 send_ok("ok");
                 break;
 

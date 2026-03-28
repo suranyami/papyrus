@@ -13,7 +13,7 @@ PRIV_DIR ?= $(MIX_APP_PATH)/priv
 TARGET = $(PRIV_DIR)/epd_port
 
 SRCS = epd_port.c \
-       waveshare/epd12in48/EPD_12in48.c \
+       waveshare/epd12in48/EPD_12in48b.c \
        waveshare/epd12in48/DEV_Config.c
 
 UNAME_S := $(shell uname -s)
