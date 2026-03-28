@@ -7,7 +7,7 @@
 
 ### Hardware Driver
 
-- [ ] **DRIVER-01**: C port binary polls stdin alongside hardware I/O and exits on EOF, preventing zombie processes when the BEAM restarts
+- [x] **DRIVER-01**: C port binary polls stdin alongside hardware I/O and exits on EOF, preventing zombie processes when the BEAM restarts
 - [ ] **DRIVER-02**: `Papyrus.DisplaySpec` struct extended with `color_mode`, `pin_config`, and `partial_refresh` fields — stable contract before any new drivers are ported
 
 ### Bitmap Rendering
@@ -72,7 +72,7 @@ Deferred to the next milestone. These depend on v1's stable `DisplaySpec` contra
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DRIVER-01 | Phase 1 | Pending |
+| DRIVER-01 | Phase 1 | Complete |
 | DRIVER-02 | Phase 1 | Pending |
 | TEST-01 | Phase 2 | Pending |
 | TEST-02 | Phase 2 | Pending |

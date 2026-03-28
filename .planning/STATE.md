@@ -1,3 +1,17 @@
+---
+gsd_state_version: 1.0
+milestone: v0.1.0
+milestone_name: milestone
+status: Ready to execute
+stopped_at: "Completed 01-02-PLAN.md: select()-based stdin EOF detection in epd_port.c"
+last_updated: "2026-03-28T03:44:35.438Z"
+progress:
+  total_phases: 4
+  completed_phases: 0
+  total_plans: 2
+  completed_plans: 1
+---
+
 # Project State
 
 ## Project Reference
@@ -5,20 +19,17 @@
 See: .planning/PROJECT.md (updated 2026-03-28)
 
 **Core value:** Any Waveshare ePaper display should be driveable from Elixir in under 10 lines of code, with the hardware abstraction solid enough that adding a new display model requires only a config module — not C code changes.
-**Current focus:** Phase 1 — DisplaySpec and C Port Foundation
+**Current focus:** Phase 01 — displayspec-and-c-port-foundation
 
 ## Current Position
 
-Phase: 1 of 4 (DisplaySpec and C Port Foundation)
-Plan: 0 of ? in current phase
-Status: Ready to plan
-Last activity: 2026-03-28 — Roadmap created; ready to begin Phase 1 planning
-
-Progress: [░░░░░░░░░░] 0%
+Phase: 01 (displayspec-and-c-port-foundation) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
 **Velocity:**
+
 - Total plans completed: 0
 - Average duration: -
 - Total execution time: 0 hours
@@ -30,10 +41,12 @@ Progress: [░░░░░░░░░░] 0%
 | - | - | - | - |
 
 **Recent Trend:**
+
 - Last 5 plans: -
 - Trend: -
 
 *Updated after each plan completion*
+| Phase 01-displayspec-and-c-port-foundation P02 | 5 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -45,6 +58,7 @@ Recent decisions affecting current work:
 - Port process (not NIF): Hardware faults must not crash the BEAM VM; display refreshes are slow and blocking
 - Config-driven display abstraction: 40+ drivers with mostly-shared logic — parameterise constants, subclass for structural differences
 - All image processing stays in pure Elixir: sending a finished packed binary to the C port is simpler, safer, and more testable than processing in C
+- [Phase 01-displayspec-and-c-port-foundation]: select() in idle loop only — simplest approach satisfying exit-within-one-timeout-cycle criterion without touching BUSY-pin loops
 
 ### Pending Todos
 
@@ -57,6 +71,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28
-Stopped at: Roadmap created, STATE.md initialized — ready to run /gsd:plan-phase 1
+Last session: 2026-03-28T03:44:35.427Z
+Stopped at: Completed 01-02-PLAN.md: select()-based stdin EOF detection in epd_port.c
 Resume file: None
