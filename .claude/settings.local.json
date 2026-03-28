@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(gsd:plan-phase)",
+      "Skill(gsd:discuss-phase)",
+      "Skill(gsd:execute-phase)",
+      "Bash(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" config-get workflow.discuss_mode)",
+      "Bash(find /Users/djp/development/projects/papyrus/.planning/phases -name *-CONTEXT.md)",
+      "Bash(else echo:*)",
+      "Bash(fi)",
+      "Bash(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" todo match-phase \"2\")",
+      "Bash(xargs cat:*)"
+    ]
+  }
+}

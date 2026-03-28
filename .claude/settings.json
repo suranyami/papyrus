@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mix format:*)",
+      "Bash(mix compile:*)",
+      "Bash(mix test:*)",
+      "Bash(mix credo:*)",
+      "Bash(mix deps.get:*)",
+      "Bash(mix docs:*)",
+      "Bash(make:*)",
+      "Bash(gcc:*)",
+      "Bash(git:*)",
+      "Bash(ls:*)",
+      "Bash(wc:*)"
+    ]
+  }
+}

@@ -16,3 +16,5 @@ erl_crash.dump
 
 # macOS
 .DS_Store
+
+# Claude worktrees

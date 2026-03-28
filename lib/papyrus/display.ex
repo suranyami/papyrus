@@ -84,7 +84,11 @@ defmodule Papyrus.Display do
 
   @impl GenServer
   def handle_call({:display, image}, from, %{spec: spec} = state) do
-    expected = spec.buffer_size
+    expected =
+      case spec.color_mode do
+        :three_color -> 2 * spec.buffer_size
+        _ -> spec.buffer_size
+      end
 
     case byte_size(image) do
       ^expected ->
