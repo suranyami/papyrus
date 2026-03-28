@@ -21,6 +21,8 @@ Any Waveshare ePaper display should be driveable from Elixir in under 10 lines o
 
 **Driver abstraction & multi-display support**
 - [ ] Refactor C port to support multiple display families via a config-driven approach (width, height, pin assignments, command bytes as parameters rather than compile-time constants)
+- ✓ `Papyrus.DisplaySpec` struct extended with `pin_config` (enforce_keys), `partial_refresh`, and `color_mode: :three_color` — stable Elixir↔C contract — Phase 1 (2026-03-28)
+- ✓ C port `epd_port` hardened with `select()`-based stdin EOF detection — no zombie processes on BEAM restart — Phase 1 (2026-03-28)
 - [ ] Define Elixir-side display config struct covering all variant dimensions: resolution, buffer format, color mode (B&W / 3-color / 4-gray), partial refresh capability, pin assignments
 - [ ] Port a representative set of Waveshare drivers covering all major variants: standard B&W, 3-color (red/yellow), 4-gray, partial-refresh capable
 
@@ -74,4 +76,4 @@ Any Waveshare ePaper display should be driveable from Elixir in under 10 lines o
 | Config-driven display abstraction | 40+ drivers with mostly-shared logic — parameterise constants, subclass for structural differences | — Pending |
 
 ---
-*Last updated: 2026-03-28 after initial project setup*
+*Last updated: 2026-03-28 after Phase 1 completion — DisplaySpec contract stable, C port hardened*
