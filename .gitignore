@@ -2,6 +2,7 @@
 /_build/
 /deps/
 /priv/epd_port
+/priv/.epd_port_stub
 
 # Mix
 *.ez
