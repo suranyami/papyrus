@@ -28,7 +28,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. `Papyrus.DisplaySpec` includes `color_mode`, `pin_config`, and `partial_refresh` fields with documented types and defaults
   3. When the BEAM VM is killed with kill -9, the `epd_port` OS process exits within one select timeout cycle (no zombie device-busy on next start)
   4. The existing 12.48" B&W display continues to work end-to-end with the updated struct and port binary
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Extend DisplaySpec struct with pin_config, partial_refresh, expanded color_mode type; update Waveshare12in48
+- [ ] 01-02-PLAN.md — Harden C port with select()-based stdin EOF detection to prevent zombie processes
 
 ### Phase 2: Test Infrastructure and TestPattern
 **Goal**: Any contributor can run the full ExUnit suite on a Mac or CI runner with no display hardware attached and get a green result
@@ -71,7 +75,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. DisplaySpec and C Port Foundation | 0/? | Not started | - |
+| 1. DisplaySpec and C Port Foundation | 0/2 | Planning complete | - |
 | 2. Test Infrastructure and TestPattern | 0/? | Not started | - |
 | 3. Bitmap Rendering Pipeline | 0/? | Not started | - |
 | 4. Documentation and Hex.pm Readiness | 0/? | Not started | - |
