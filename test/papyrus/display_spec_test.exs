@@ -13,14 +13,15 @@ defmodule Papyrus.DisplaySpecTest do
   }
 
   describe "struct enforcement" do
-    test "omitting pin_config raises KeyError" do
-      assert_raise KeyError, fn ->
-        %DisplaySpec{
+    test "omitting pin_config raises ArgumentError" do
+      assert_raise ArgumentError, ~r/pin_config/, fn ->
+        # Use struct!/2 to bypass compile-time enforce_keys check so we can test runtime enforcement
+        struct!(DisplaySpec, %{
           model: :test_display,
           width: 200,
           height: 200,
           buffer_size: 5000
-        }
+        })
       end
     end
 
@@ -33,9 +34,9 @@ defmodule Papyrus.DisplaySpecTest do
       assert spec.pin_config == @valid_pin_config
     end
 
-    test "omitting model raises KeyError" do
-      assert_raise KeyError, fn ->
-        %DisplaySpec{width: 200, height: 200, buffer_size: 5000, pin_config: @valid_pin_config}
+    test "omitting model raises ArgumentError" do
+      assert_raise ArgumentError, ~r/model/, fn ->
+        struct!(DisplaySpec, %{width: 200, height: 200, buffer_size: 5000, pin_config: @valid_pin_config})
       end
     end
   end
