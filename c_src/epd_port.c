@@ -17,6 +17,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <sys/select.h>
 
 #include "waveshare/epd12in48/EPD_12in48.h"
 #include "waveshare/epd12in48/DEV_Config.h"
@@ -25,6 +26,8 @@
 #define CMD_DISPLAY 0x02
 #define CMD_CLEAR   0x03
 #define CMD_SLEEP   0x04
+
+#define STDIN_POLL_TIMEOUT_SEC 1  /* select() timeout for stdin EOF detection */
 
 #define BUFFER_SIZE (163 * 984)  /* 160392 bytes */
 
@@ -97,11 +100,33 @@ int main(void) {
     }
 
     for (;;) {
+        /* Poll stdin for readability — detects EOF even when idle */
+        fd_set rfds;
+        struct timeval tv;
+        int sel_ret;
+
+        for (;;) {
+            FD_ZERO(&rfds);
+            FD_SET(STDIN_FILENO, &rfds);
+            tv.tv_sec = STDIN_POLL_TIMEOUT_SEC;
+            tv.tv_usec = 0;
+
+            sel_ret = select(STDIN_FILENO + 1, &rfds, NULL, NULL, &tv);
+            if (sel_ret < 0) {
+                /* select error (e.g., EINTR from signal) — treat as fatal */
+                goto cleanup;
+            }
+            if (sel_ret > 0) {
+                break;  /* stdin is readable — proceed to read_exact */
+            }
+            /* sel_ret == 0: timeout — loop back to poll again */
+        }
+
         /* Read 5-byte header: [1 cmd][4 payload_len BE] */
         uint8_t hdr[5];
         if (read_exact(hdr, 5) != 0) {
             /* stdin closed — normal exit */
-            break;
+            goto cleanup;
         }
 
         uint8_t  cmd = hdr[0];
@@ -118,7 +143,7 @@ int main(void) {
         uint8_t *payload = (payload_len > 0) ? image_buf : NULL;
         if (payload_len > 0) {
             if (read_exact(payload, payload_len) != 0) {
-                break;
+                goto cleanup;
             }
         }
 
@@ -157,6 +182,7 @@ int main(void) {
         }
     }
 
+cleanup:
     free(image_buf);
     DEV_ModuleExit();
     return 0;
