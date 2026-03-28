@@ -241,7 +241,7 @@ void EPD_12in48B_Display(const UBYTE *BlackImage, const UBYTE *RedImage)
     EPD_S2_SendCommand(0x13);
     for(y = 0; y < 492; y++)
         for(x = 0; x < 81; x++)
-            EPD_S2_SendData(~*(RedImage + (y*163 + x)));
+            EPD_S2_SendData(*(RedImage + (y*163 + x)));
 
     // M2: top-right 656*492
     EPD_M2_SendCommand(0x10);
@@ -251,7 +251,7 @@ void EPD_12in48B_Display(const UBYTE *BlackImage, const UBYTE *RedImage)
     EPD_M2_SendCommand(0x13);
     for(y = 0; y < 492; y++)
         for(x = 81; x < 163; x++)
-            EPD_M2_SendData(~*(RedImage + (y*163 + x)));
+            EPD_M2_SendData(*(RedImage + (y*163 + x)));
 
     // S1: bottom-right 656*492
     EPD_S1_SendCommand(0x10);
@@ -261,7 +261,7 @@ void EPD_12in48B_Display(const UBYTE *BlackImage, const UBYTE *RedImage)
     EPD_S1_SendCommand(0x13);
     for(y = 492; y < 984; y++)
         for(x = 81; x < 163; x++)
-            EPD_S1_SendData(~*(RedImage + (y*163 + x)));
+            EPD_S1_SendData(*(RedImage + (y*163 + x)));
 
     // M1: bottom-left 648*492
     EPD_M1_SendCommand(0x10);
@@ -271,7 +271,7 @@ void EPD_12in48B_Display(const UBYTE *BlackImage, const UBYTE *RedImage)
     EPD_M1_SendCommand(0x13);
     for(y = 492; y < 984; y++)
         for(x = 0; x < 81; x++)
-            EPD_M1_SendData(~*(RedImage + (y*163 + x)));
+            EPD_M1_SendData(*(RedImage + (y*163 + x)));
 
     EPD_12in48B_TurnOnDisplay();
 }

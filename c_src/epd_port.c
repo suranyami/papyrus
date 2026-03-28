@@ -15,10 +15,9 @@
  * Buffer layout: 984 rows × 163 bytes/row = 160,392 bytes per colour plane.
  * CMD_DISPLAY expects both planes concatenated: black_plane <> red_plane.
  *
- * Red plane encoding (Elixir side):
- *   0x00 bytes = no red (white background)
+ * Red plane encoding (Elixir side and hardware register 0x13):
+ *   0x00 bytes = no red (transparent / white background)
  *   0xFF bytes = red pixels
- * The C driver inverts the red plane before sending it to the panel hardware.
  *****************************************************************************/
 
 #include <stdio.h>
