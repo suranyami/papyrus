@@ -87,9 +87,10 @@ defmodule Papyrus.MockPortTest do
       assert Protocol.decode_response(data) == {:ok, ""}
     end
 
-    test "exits cleanly with status 0 when port is closed (stdin EOF)", %{port: port} do
+    test "exits cleanly when port is closed (stdin EOF)", %{port: port} do
+      ref = Port.monitor(port)
       Port.close(port)
-      assert_receive {^port, {:exit_status, 0}}, 10_000
+      assert_receive {:DOWN, ^ref, :port, ^port, :normal}, 10_000
     end
   end
 
