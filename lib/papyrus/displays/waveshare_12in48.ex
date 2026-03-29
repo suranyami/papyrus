@@ -45,6 +45,7 @@ defmodule Papyrus.Displays.Waveshare12in48 do
       buffer_size: 163 * 984,
       color_mode: :three_color,
       partial_refresh: false,
+      bit_order: :white_high,
       pin_config: %{
         sck: 11, mosi: 10,
         m1_cs: 8,  s1_cs: 7,  m2_cs: 17, s2_cs: 18,
