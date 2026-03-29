@@ -32,15 +32,13 @@ Any Waveshare ePaper display should be driveable from Elixir in under 10 lines o
 - [ ] Dithering support for converting grayscale images to 1-bit and 4-gray formats
 
 **Test patterns**
-- [ ] `Papyrus.TestPattern` — built-in visual verification patterns:
-  - Fill tests: full white, full black, checkerboard (basic pixel addressing)
-  - Border/edge alignment: bounding box at display edges (verifies full resolution)
-  - Gray ramp: all 4 gray levels (for 4-gray displays)
-  - Color layer test: B&W + accent layer separately (for 3-color displays)
-  - Text/font probe: sample text at multiple sizes
+- ✓ `Papyrus.TestPattern` — `full_white/1`, `full_black/1`, `checkerboard/1` with `:bit_order` awareness — Phase 2 (2026-03-29)
+- [ ] Border/edge, gray ramp, color layer, text/font probe patterns (v2)
 
 **Library quality (Hex.pm readiness)**
-- [ ] ExUnit test suite covering Protocol, DisplaySpec, Bitmap, and TestPattern (no hardware required — mock port binary for Display tests)
+- ✓ ExUnit test suite: 72 tests, 0 failures on macOS with no hardware — Protocol, DisplaySpec, Display (mock port), TestPattern — Phase 2 (2026-03-29)
+- ✓ Mock port (`test/support/mock_port_script.exs`) with configurable per-test responses — Phase 2 (2026-03-29)
+- ✓ Two-tier test taxonomy (CI-safe vs hardware-required) documented in TESTING.md — Phase 2 (2026-03-29)
 - [ ] ExDoc documentation with getting-started guide, hardware setup, and display model reference
 - [ ] Working `examples/hello_papyrus` example app
 
@@ -76,4 +74,4 @@ Any Waveshare ePaper display should be driveable from Elixir in under 10 lines o
 | Config-driven display abstraction | 40+ drivers with mostly-shared logic — parameterise constants, subclass for structural differences | — Pending |
 
 ---
-*Last updated: 2026-03-28 after Phase 1 completion — DisplaySpec contract stable, C port hardened*
+*Last updated: 2026-03-29 after Phase 2 completion — 72-test suite green on macOS, TestPattern implemented, two-tier test taxonomy established*
