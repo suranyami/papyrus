@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v0.1.0
 milestone_name: milestone
-status: Ready to plan
-stopped_at: Completed 01-displayspec-and-c-port-foundation/01-01-PLAN.md
-last_updated: "2026-03-28T03:53:12.517Z"
+status: Ready to execute
+stopped_at: Completed 02-test-infrastructure-and-testpattern/02-01-PLAN.md
+last_updated: "2026-03-29T02:47:50.676Z"
 progress:
-  total_phases: 4
+  total_phases: 5
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 5
+  completed_plans: 3
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-28)
 
 **Core value:** Any Waveshare ePaper display should be driveable from Elixir in under 10 lines of code, with the hardware abstraction solid enough that adding a new display model requires only a config module — not C code changes.
-**Current focus:** Phase 01 — displayspec-and-c-port-foundation
+**Current focus:** Phase 02 — test-infrastructure-and-testpattern
 
 ## Current Position
 
-Phase: 2
-Plan: Not started
+Phase: 02 (test-infrastructure-and-testpattern) — EXECUTING
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -48,6 +48,7 @@ Plan: Not started
 *Updated after each plan completion*
 | Phase 01-displayspec-and-c-port-foundation P02 | 5 | 1 tasks | 1 files |
 | Phase 01-displayspec-and-c-port-foundation P01 | 18 | 2 tasks | 7 files |
+| Phase 02-test-infrastructure-and-testpattern P01 | 4 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -63,6 +64,8 @@ Recent decisions affecting current work:
 - [Phase 01-displayspec-and-c-port-foundation]: pin_config is flat atom-keyed map with keys mirroring DEV_Config.h naming; added to enforce_keys so every display module must provide GPIO config
 - [Phase 01-displayspec-and-c-port-foundation]: color_mode includes :three_color in type definition for stable v1 contract even without a 3-color driver this phase
 - [Phase 01-displayspec-and-c-port-foundation]: Makefile skips C compilation on non-Linux (macOS) — lgpio is Raspberry Pi only; test suite runs via Elixir-only compilation
+- [Phase 02-test-infrastructure-and-testpattern]: :bit_order enforced on DisplaySpec — every display module must declare pixel polarity; no silent wrong-color buffers
+- [Phase 02-test-infrastructure-and-testpattern]: checkerboard/1 is bit_order-agnostic — tests pixel addressing via 0xAA/0x55; same pattern for :white_high and :white_low
 
 ### Pending Todos
 
@@ -75,6 +78,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T03:49:09.461Z
-Stopped at: Completed 01-displayspec-and-c-port-foundation/01-01-PLAN.md
+Last session: 2026-03-29T02:47:50.674Z
+Stopped at: Completed 02-test-infrastructure-and-testpattern/02-01-PLAN.md
 Resume file: None

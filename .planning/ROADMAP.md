@@ -48,7 +48,7 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Extend DisplaySpec with :bit_order and create Papyrus.TestPattern module
+- [x] 02-01-PLAN.md — Extend DisplaySpec with :bit_order and create Papyrus.TestPattern module
 - [ ] 02-02-PLAN.md — Create mock port script for hardware-free CI testing
 - [ ] 02-03-PLAN.md — Protocol/Display tests, two-tier test taxonomy, REQUIREMENTS.md update
 
