@@ -18,7 +18,7 @@
 ### Test Infrastructure
 
 - [x] **TEST-01**: A mock port binary included in `test/support` speaks the length-prefixed protocol, enabling hardware-free CI testing
-- [ ] **TEST-02**: ExUnit tests cover `Papyrus.Protocol`, `Papyrus.Bitmap`, `Papyrus.DisplaySpec`, and `Papyrus.TestPattern` with no hardware required
+- [ ] **TEST-02**: ExUnit tests cover `Papyrus.Protocol`, `Papyrus.DisplaySpec`, and `Papyrus.TestPattern` with no hardware required
 - [ ] **TEST-03**: Two-tier test taxonomy documented: CI (mock port) tests vs hardware-verified checklist
 
 ### Test Patterns
