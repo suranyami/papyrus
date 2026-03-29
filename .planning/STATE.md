@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v0.1.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 02-test-infrastructure-and-testpattern/02-01-PLAN.md
-last_updated: "2026-03-29T02:47:50.676Z"
+stopped_at: Completed 02-test-infrastructure-and-testpattern/02-02-PLAN.md
+last_updated: "2026-03-29T02:49:03.084Z"
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 5
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 ## Current Position
 
 Phase: 02 (test-infrastructure-and-testpattern) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -49,6 +49,7 @@ Plan: 2 of 3
 | Phase 01-displayspec-and-c-port-foundation P02 | 5 | 1 tasks | 1 files |
 | Phase 01-displayspec-and-c-port-foundation P01 | 18 | 2 tasks | 7 files |
 | Phase 02-test-infrastructure-and-testpattern P01 | 4 | 2 tasks | 6 files |
+| Phase 02-test-infrastructure-and-testpattern P02 | 274 | 1 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -66,6 +67,9 @@ Recent decisions affecting current work:
 - [Phase 01-displayspec-and-c-port-foundation]: Makefile skips C compilation on non-Linux (macOS) — lgpio is Raspberry Pi only; test suite runs via Elixir-only compilation
 - [Phase 02-test-infrastructure-and-testpattern]: :bit_order enforced on DisplaySpec — every display module must declare pixel polarity; no silent wrong-color buffers
 - [Phase 02-test-infrastructure-and-testpattern]: checkerboard/1 is bit_order-agnostic — tests pixel addressing via 0xAA/0x55; same pattern for :white_high and :white_low
+- [Phase 02-test-infrastructure-and-testpattern]: Use :file.read/:file.write for raw binary port I/O in elixir scripts (not IO.binread)
+- [Phase 02-test-infrastructure-and-testpattern]: Compile-time __DIR__ for test support path resolution (not runtime :code.priv_dir which resolves to _build)
+- [Phase 02-test-infrastructure-and-testpattern]: Port.monitor + :DOWN for port lifecycle assertions — Port.close does not deliver :exit_status messages
 
 ### Pending Todos
 
@@ -78,6 +82,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-29T02:47:50.674Z
-Stopped at: Completed 02-test-infrastructure-and-testpattern/02-01-PLAN.md
+Last session: 2026-03-29T02:49:03.082Z
+Stopped at: Completed 02-test-infrastructure-and-testpattern/02-02-PLAN.md
 Resume file: None

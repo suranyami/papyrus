@@ -17,15 +17,15 @@
 
 ### Test Infrastructure
 
-- [ ] **TEST-01**: A mock port binary included in `test/support` speaks the length-prefixed protocol, enabling hardware-free CI testing
+- [x] **TEST-01**: A mock port binary included in `test/support` speaks the length-prefixed protocol, enabling hardware-free CI testing
 - [ ] **TEST-02**: ExUnit tests cover `Papyrus.Protocol`, `Papyrus.Bitmap`, `Papyrus.DisplaySpec`, and `Papyrus.TestPattern` with no hardware required
 - [ ] **TEST-03**: Two-tier test taxonomy documented: CI (mock port) tests vs hardware-verified checklist
 
 ### Test Patterns
 
-- [ ] **PATTERN-01**: `Papyrus.TestPattern` produces a full-white buffer for any `DisplaySpec`
-- [ ] **PATTERN-02**: `Papyrus.TestPattern` produces a full-black buffer for any `DisplaySpec`
-- [ ] **PATTERN-03**: `Papyrus.TestPattern` produces a checkerboard buffer for any `DisplaySpec`
+- [x] **PATTERN-01**: `Papyrus.TestPattern` produces a full-white buffer for any `DisplaySpec`
+- [x] **PATTERN-02**: `Papyrus.TestPattern` produces a full-black buffer for any `DisplaySpec`
+- [x] **PATTERN-03**: `Papyrus.TestPattern` produces a checkerboard buffer for any `DisplaySpec`
 
 ### Documentation & Packaging
 
@@ -74,12 +74,12 @@ Deferred to the next milestone. These depend on v1's stable `DisplaySpec` contra
 |-------------|-------|--------|
 | DRIVER-01 | Phase 1 | Complete |
 | DRIVER-02 | Phase 1 | Complete |
-| TEST-01 | Phase 2 | Pending |
+| TEST-01 | Phase 2 | Complete |
 | TEST-02 | Phase 2 | Pending |
 | TEST-03 | Phase 2 | Pending |
-| PATTERN-01 | Phase 2 | Pending |
-| PATTERN-02 | Phase 2 | Pending |
-| PATTERN-03 | Phase 2 | Pending |
+| PATTERN-01 | Phase 2 | Complete |
+| PATTERN-02 | Phase 2 | Complete |
+| PATTERN-03 | Phase 2 | Complete |
 | BITMAP-01 | Phase 3 | Pending |
 | BITMAP-02 | Phase 3 | Pending |
 | DOCS-01 | Phase 4 | Pending |
