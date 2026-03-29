@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v0.1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 03-bitmap-rendering-pipeline/03-01-PLAN.md
-last_updated: "2026-03-29T08:14:27.493Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 03-bitmap-rendering-pipeline/03-02-PLAN.md
+last_updated: "2026-03-29T09:18:45.520Z"
 progress:
   total_phases: 5
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 7
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # Project State
@@ -52,6 +52,7 @@ Plan: 2 of 2
 | Phase 02-test-infrastructure-and-testpattern P02 | 274 | 1 tasks | 5 files |
 | Phase 02-test-infrastructure-and-testpattern P03 | 10 | 2 tasks | 6 files |
 | Phase 03-bitmap-rendering-pipeline P01 | 208 | 2 tasks | 9 files |
+| Phase 03-bitmap-rendering-pipeline P02 | 480 | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,8 @@ Recent decisions affecting current work:
 - [Phase 02-test-infrastructure-and-testpattern]: GenServer stays alive after error response — only port exit terminates; use write_response_file/2 + port_executable/1 for error-path tests
 - [Phase 03-bitmap-rendering-pipeline]: loader/0 deferred to Plan 02 — unused private function fails --warnings-as-errors; will be added when from_image/2 is implemented
 - [Phase 03-bitmap-rendering-pipeline]: StbImage fixture generation uses StbImage.new/2, not from_binary/2 which does not exist in stb_image 0.6.10
+- [Phase 03-bitmap-rendering-pipeline]: Floyd-Steinberg row-by-row reduce with next_row_errors list — avoids %{{x,y} => val} map, constant memory per row
+- [Phase 03-bitmap-rendering-pipeline]: resize.ex assertion guard: ^expected_size = byte_size(result) — catches padding dimension math bugs at dev-time
 
 ### Pending Todos
 
@@ -88,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-29T08:14:27.490Z
-Stopped at: Completed 03-bitmap-rendering-pipeline/03-01-PLAN.md
+Last session: 2026-03-29T09:18:45.518Z
+Stopped at: Completed 03-bitmap-rendering-pipeline/03-02-PLAN.md
 Resume file: None
