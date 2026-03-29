@@ -16,6 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2: Test Infrastructure and TestPattern** - Mock port binary for hardware-free CI; `Papyrus.TestPattern` fill patterns; full ExUnit suite; two-tier test taxonomy
 - [ ] **Phase 3: Bitmap Rendering Pipeline** - `Papyrus.Bitmap` converts PNG/BMP to packed 1-bit ePaper binary buffers using spec-aware encoding
 - [ ] **Phase 4: Documentation and Hex.pm Readiness** - ExDoc guides, `examples/hello_papyrus`, and complete Hex.pm packaging
+- [ ] **Phase 5: Hardware SPI Optimization** - Replace bit-banged software SPI with lgpio hardware SPI; reduce bitmap transfer from ~10s to ~150ms
 
 ## Phase Details
 
@@ -44,7 +45,12 @@ Plans:
   3. `Papyrus.TestPattern.full_black(spec)` returns a correctly-sized all-bits-clear binary for any valid `DisplaySpec`
   4. `Papyrus.TestPattern.checkerboard(spec)` returns a correctly-sized alternating-byte binary for any valid `DisplaySpec`
   5. The two-tier test taxonomy (CI-safe vs hardware-required) is documented so contributors know which tests require physical hardware
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Extend DisplaySpec with :bit_order and create Papyrus.TestPattern module
+- [ ] 02-02-PLAN.md — Create mock port script for hardware-free CI testing
+- [ ] 02-03-PLAN.md — Protocol/Display tests, two-tier test taxonomy, REQUIREMENTS.md update
 
 ### Phase 3: Bitmap Rendering Pipeline
 **Goal**: A developer can convert any PNG or BMP image to a ready-to-display ePaper binary buffer in a single function call
@@ -55,6 +61,19 @@ Plans:
   2. `Papyrus.Bitmap.blank(spec)` returns an all-white buffer of the correct size for any `DisplaySpec`
   3. PNG and BMP input formats both load and convert without error
   4. Buffer encoding respects the `DisplaySpec`'s bit order so the image appears correctly oriented on hardware
+**Plans**: TBD
+
+### Phase 5: Hardware SPI Optimization
+**Goal**: Replace the bit-banged software SPI in `DEV_Config.c` with lgpio hardware SPI so bitmap transfers take ~150ms instead of ~10s
+**Depends on**: Phase 4
+**Requirements**: TBD
+**Success Criteria** (what must be TRUE):
+  1. A full clear + display cycle (640k bytes) completes SPI transfer in under 500ms on a Raspberry Pi at 10 MHz
+  2. The 4 sub-panel CS pins continue to be asserted correctly per-transfer (GPIO-controlled CS, hardware SPI for data)
+  3. All existing display, clear, and sleep operations pass hardware smoke tests
+  4. The software SPI path is removed; no regression on non-Linux platforms (compilation still skipped on macOS)
+
+**Background:** `DEV_SPI_WriteByte` is bit-banged — each byte requires 27 `lgGpioWrite()` syscalls (~1–2 µs each), costing ~50 µs/byte. At 320,784 bytes per refresh this takes 5–10 seconds just to transfer data before the panel refresh even starts. Switching to `lgSpiOpen`/`lgSpiWrite` bulk transfers at 10+ MHz would reduce this to ~150ms.
 **Plans**: TBD
 
 ### Phase 4: Documentation and Hex.pm Readiness
@@ -71,11 +90,12 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. DisplaySpec and C Port Foundation | 2/2 | Complete   | 2026-03-28 |
-| 2. Test Infrastructure and TestPattern | 0/? | Not started | - |
+| 2. Test Infrastructure and TestPattern | 0/3 | Not started | - |
 | 3. Bitmap Rendering Pipeline | 0/? | Not started | - |
 | 4. Documentation and Hex.pm Readiness | 0/? | Not started | - |
+| 5. Hardware SPI Optimization | 0/? | Not started | - |
