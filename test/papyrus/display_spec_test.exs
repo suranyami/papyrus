@@ -9,7 +9,8 @@ defmodule Papyrus.DisplaySpecTest do
     width: 200,
     height: 200,
     buffer_size: 5000,
-    pin_config: @valid_pin_config
+    pin_config: @valid_pin_config,
+    bit_order: :white_high
   }
 
   describe "struct enforcement" do
@@ -22,6 +23,12 @@ defmodule Papyrus.DisplaySpecTest do
           height: 200,
           buffer_size: 5000
         })
+      end
+    end
+
+    test "omitting bit_order raises ArgumentError" do
+      assert_raise ArgumentError, ~r/bit_order/, fn ->
+        struct!(DisplaySpec, Map.delete(@valid_attrs, :bit_order))
       end
     end
 
@@ -50,6 +57,18 @@ defmodule Papyrus.DisplaySpecTest do
     test "color_mode defaults to :black_white when not provided" do
       spec = struct!(DisplaySpec, @valid_attrs)
       assert spec.color_mode == :black_white
+    end
+  end
+
+  describe "bit_order field" do
+    test "bit_order is :white_high when set" do
+      spec = struct!(DisplaySpec, @valid_attrs)
+      assert spec.bit_order == :white_high
+    end
+
+    test "bit_order can be set to :white_low" do
+      spec = struct!(DisplaySpec, Map.put(@valid_attrs, :bit_order, :white_low))
+      assert spec.bit_order == :white_low
     end
   end
 

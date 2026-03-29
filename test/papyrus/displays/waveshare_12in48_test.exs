@@ -26,8 +26,12 @@ defmodule Papyrus.Displays.Waveshare12in48Test do
       assert spec.buffer_size == 163 * 984
     end
 
-    test "color_mode is :black_white", %{spec: spec} do
-      assert spec.color_mode == :black_white
+    test "color_mode is :three_color", %{spec: spec} do
+      assert spec.color_mode == :three_color
+    end
+
+    test "bit_order is :white_high", %{spec: spec} do
+      assert spec.bit_order == :white_high
     end
 
     test "partial_refresh is false", %{spec: spec} do
