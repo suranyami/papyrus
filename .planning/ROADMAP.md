@@ -65,7 +65,7 @@ Plans:
 
 Plans:
 - [x] 03-01-PLAN.md — Add stb_image dep, Loader behaviour, StbLoader, blank/1, test fixtures
-- [ ] 03-02-PLAN.md — Implement resize, threshold, dither, bit packing, wire from_image/2,3
+- [x] 03-02-PLAN.md — Implement resize, threshold, dither, bit packing, wire from_image/2,3
 
 ### Phase 5: Hardware SPI Optimization
 **Goal**: Replace the bit-banged software SPI in `DEV_Config.c` with lgpio hardware SPI so bitmap transfers take ~150ms instead of ~10s
