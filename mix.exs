@@ -32,6 +32,7 @@ defmodule Papyrus.MixProject do
   defp deps do
     [
       {:elixir_make, "~> 0.7", runtime: false},
+      {:stb_image, "~> 0.6"},
       {:ex_doc, "~> 0.31", only: :dev, runtime: false}
     ]
   end
