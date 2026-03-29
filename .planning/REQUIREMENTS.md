@@ -18,8 +18,8 @@
 ### Test Infrastructure
 
 - [x] **TEST-01**: A mock port binary included in `test/support` speaks the length-prefixed protocol, enabling hardware-free CI testing
-- [ ] **TEST-02**: ExUnit tests cover `Papyrus.Protocol`, `Papyrus.DisplaySpec`, and `Papyrus.TestPattern` with no hardware required
-- [ ] **TEST-03**: Two-tier test taxonomy documented: CI (mock port) tests vs hardware-verified checklist
+- [x] **TEST-02**: ExUnit tests cover `Papyrus.Protocol`, `Papyrus.DisplaySpec`, and `Papyrus.TestPattern` with no hardware required
+- [x] **TEST-03**: Two-tier test taxonomy documented: CI (mock port) tests vs hardware-verified checklist
 
 ### Test Patterns
 
@@ -75,8 +75,8 @@ Deferred to the next milestone. These depend on v1's stable `DisplaySpec` contra
 | DRIVER-01 | Phase 1 | Complete |
 | DRIVER-02 | Phase 1 | Complete |
 | TEST-01 | Phase 2 | Complete |
-| TEST-02 | Phase 2 | Pending |
-| TEST-03 | Phase 2 | Pending |
+| TEST-02 | Phase 2 | Complete |
+| TEST-03 | Phase 2 | Complete |
 | PATTERN-01 | Phase 2 | Complete |
 | PATTERN-02 | Phase 2 | Complete |
 | PATTERN-03 | Phase 2 | Complete |

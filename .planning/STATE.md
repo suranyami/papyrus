@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v0.1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 02-test-infrastructure-and-testpattern/02-02-PLAN.md
-last_updated: "2026-03-29T02:49:03.084Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 02-test-infrastructure-and-testpattern/02-03-PLAN.md
+last_updated: "2026-03-29T03:22:33.936Z"
 progress:
   total_phases: 5
   completed_phases: 1
@@ -50,6 +50,7 @@ Plan: 3 of 3
 | Phase 01-displayspec-and-c-port-foundation P01 | 18 | 2 tasks | 7 files |
 | Phase 02-test-infrastructure-and-testpattern P01 | 4 | 2 tasks | 6 files |
 | Phase 02-test-infrastructure-and-testpattern P02 | 274 | 1 tasks | 5 files |
+| Phase 02-test-infrastructure-and-testpattern P03 | 10 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -70,6 +71,8 @@ Recent decisions affecting current work:
 - [Phase 02-test-infrastructure-and-testpattern]: Use :file.read/:file.write for raw binary port I/O in elixir scripts (not IO.binread)
 - [Phase 02-test-infrastructure-and-testpattern]: Compile-time __DIR__ for test support path resolution (not runtime :code.priv_dir which resolves to _build)
 - [Phase 02-test-infrastructure-and-testpattern]: Port.monitor + :DOWN for port lifecycle assertions — Port.close does not deliver :exit_status messages
+- [Phase 02-test-infrastructure-and-testpattern]: Display tests are not async — they open OS ports and must serialize
+- [Phase 02-test-infrastructure-and-testpattern]: GenServer stays alive after error response — only port exit terminates; use write_response_file/2 + port_executable/1 for error-path tests
 
 ### Pending Todos
 
@@ -82,6 +85,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-29T02:49:03.082Z
-Stopped at: Completed 02-test-infrastructure-and-testpattern/02-02-PLAN.md
+Last session: 2026-03-29T03:22:33.934Z
+Stopped at: Completed 02-test-infrastructure-and-testpattern/02-03-PLAN.md
 Resume file: None

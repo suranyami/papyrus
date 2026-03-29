@@ -45,7 +45,7 @@ Plans:
   3. `Papyrus.TestPattern.full_black(spec)` returns a correctly-sized all-bits-clear binary for any valid `DisplaySpec`
   4. `Papyrus.TestPattern.checkerboard(spec)` returns a correctly-sized alternating-byte binary for any valid `DisplaySpec`
   5. The two-tier test taxonomy (CI-safe vs hardware-required) is documented so contributors know which tests require physical hardware
-**Plans:** 3 plans
+**Plans:** 2/3 plans executed
 
 Plans:
 - [x] 02-01-PLAN.md — Extend DisplaySpec with :bit_order and create Papyrus.TestPattern module
@@ -95,7 +95,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. DisplaySpec and C Port Foundation | 2/2 | Complete   | 2026-03-28 |
-| 2. Test Infrastructure and TestPattern | 0/3 | Not started | - |
+| 2. Test Infrastructure and TestPattern | 2/3 | In Progress|  |
 | 3. Bitmap Rendering Pipeline | 0/? | Not started | - |
 | 4. Documentation and Hex.pm Readiness | 0/? | Not started | - |
 | 5. Hardware SPI Optimization | 0/? | Not started | - |
