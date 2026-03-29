@@ -27,16 +27,16 @@ Any Waveshare ePaper display should be driveable from Elixir in under 10 lines o
 - [ ] Port a representative set of Waveshare drivers covering all major variants: standard B&W, 3-color (red/yellow), 4-gray, partial-refresh capable
 
 **Rendering pipeline**
-- [ ] `Papyrus.Bitmap` — convert common image formats (PNG, BMP) to ePaper buffer binary (1-bit, 2-bit, 3-color)
+- ✓ `Papyrus.Bitmap` — PNG/BMP → packed 1-bit ePaper buffer; `blank/1`, `from_image/2,3`; letterbox resize, threshold + Floyd-Steinberg dithering, MSB-first bit packing; `Loader` behaviour for swappable backends — Phase 3 (2026-03-29)
 - [ ] `Papyrus.Renderer.Headless` — HTML → bitmap via headless Chromium; works both on Raspberry Pi and as a remote renderer pushing bitmaps over the network
-- [ ] Dithering support for converting grayscale images to 1-bit and 4-gray formats
+- [ ] Dithering support for 2-bit and 4-gray formats (current: 1-bit only)
 
 **Test patterns**
 - ✓ `Papyrus.TestPattern` — `full_white/1`, `full_black/1`, `checkerboard/1` with `:bit_order` awareness — Phase 2 (2026-03-29)
 - [ ] Border/edge, gray ramp, color layer, text/font probe patterns (v2)
 
 **Library quality (Hex.pm readiness)**
-- ✓ ExUnit test suite: 72 tests, 0 failures on macOS with no hardware — Protocol, DisplaySpec, Display (mock port), TestPattern — Phase 2 (2026-03-29)
+- ✓ ExUnit test suite: 107 tests, 0 failures on macOS with no hardware — Protocol, DisplaySpec, Display (mock port), TestPattern, Bitmap — Phase 3 (2026-03-29)
 - ✓ Mock port (`test/support/mock_port_script.exs`) with configurable per-test responses — Phase 2 (2026-03-29)
 - ✓ Two-tier test taxonomy (CI-safe vs hardware-required) documented in TESTING.md — Phase 2 (2026-03-29)
 - [ ] ExDoc documentation with getting-started guide, hardware setup, and display model reference
@@ -74,4 +74,4 @@ Any Waveshare ePaper display should be driveable from Elixir in under 10 lines o
 | Config-driven display abstraction | 40+ drivers with mostly-shared logic — parameterise constants, subclass for structural differences | — Pending |
 
 ---
-*Last updated: 2026-03-29 after Phase 2 completion — 72-test suite green on macOS, TestPattern implemented, two-tier test taxonomy established*
+*Last updated: 2026-03-29 after Phase 3 completion — 107-test suite green on macOS, Bitmap pipeline implemented (blank/1, from_image/2,3, letterbox resize, Floyd-Steinberg dithering, MSB-first packing)*
