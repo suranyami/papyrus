@@ -61,10 +61,10 @@ Plans:
   2. `Papyrus.Bitmap.blank(spec)` returns an all-white buffer of the correct size for any `DisplaySpec`
   3. PNG and BMP input formats both load and convert without error
   4. Buffer encoding respects the `DisplaySpec`'s bit order so the image appears correctly oriented on hardware
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
-- [ ] 03-01-PLAN.md — Add stb_image dep, Loader behaviour, StbLoader, blank/1, test fixtures
+- [x] 03-01-PLAN.md — Add stb_image dep, Loader behaviour, StbLoader, blank/1, test fixtures
 - [ ] 03-02-PLAN.md — Implement resize, threshold, dither, bit packing, wire from_image/2,3
 
 ### Phase 5: Hardware SPI Optimization
@@ -100,6 +100,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|----------------|--------|-----------|
 | 1. DisplaySpec and C Port Foundation | 2/2 | Complete   | 2026-03-28 |
 | 2. Test Infrastructure and TestPattern | 2/3 | In Progress|  |
-| 3. Bitmap Rendering Pipeline | 0/2 | Not started | - |
+| 3. Bitmap Rendering Pipeline | 1/2 | In Progress|  |
 | 4. Documentation and Hex.pm Readiness | 0/? | Not started | - |
 | 5. Hardware SPI Optimization | 0/? | Not started | - |

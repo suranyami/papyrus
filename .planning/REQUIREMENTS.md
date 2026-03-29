@@ -13,7 +13,7 @@
 ### Bitmap Rendering
 
 - [ ] **BITMAP-01**: Library converts a PNG or BMP image to a packed 1-bit binary buffer matching a given `DisplaySpec`'s dimensions and bit order
-- [ ] **BITMAP-02**: Library generates a blank (all-white) buffer of the correct size for any `DisplaySpec`
+- [x] **BITMAP-02**: Library generates a blank (all-white) buffer of the correct size for any `DisplaySpec`
 
 ### Test Infrastructure
 
@@ -81,7 +81,7 @@ Deferred to the next milestone. These depend on v1's stable `DisplaySpec` contra
 | PATTERN-02 | Phase 2 | Complete |
 | PATTERN-03 | Phase 2 | Complete |
 | BITMAP-01 | Phase 3 | Pending |
-| BITMAP-02 | Phase 3 | Pending |
+| BITMAP-02 | Phase 3 | Complete |
 | DOCS-01 | Phase 4 | Pending |
 | DOCS-02 | Phase 4 | Pending |
 | DOCS-03 | Phase 4 | Pending |
