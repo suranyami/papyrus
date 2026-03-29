@@ -9,7 +9,32 @@
       "Bash(else echo:*)",
       "Bash(fi)",
       "Bash(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" todo match-phase \"2\")",
-      "Bash(xargs cat:*)"
+      "Bash(xargs cat:*)",
+      "Bash(curl -s \"https://www.npmjs.com/search?q=mcp+telegram&ranking=popularity\" -H 'Accept: application/json')",
+      "Bash(python3 -c \":*)",
+      "WebSearch",
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebFetch(domain:medium.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(claude --version)",
+      "Bash(bun --version)",
+      "Bash(mkdir -p ~/.claude/channels/telegram)",
+      "Read(//Users/djp/.claude/channels/**)",
+      "Bash(chmod 600 ~/.claude/channels/telegram/.env)",
+      "Skill(telegram:access)",
+      "Bash(mkdir -p ~/.claude/channels/telegram/approved)",
+      "Bash(~/.claude/channels/telegram/approved/8229409053)",
+      "Skill(update-config)",
+      "Bash(jq:*)",
+      "Bash(node $HOME/.claude/get-shit-done/bin/gsd-tools.cjs roadmap get-phase 2)",
+      "Bash(node:*)",
+      "Bash(chmod:*)",
+      "Bash(printf '\\\\x01\\\\x00\\\\x00\\\\x00\\\\x00')",
+      "Bash(elixir test/support/mock_port_script.exs)",
+      "Bash(xxd)",
+      "Bash(mix run -e \":*)",
+      "Bash(elixir -e ':*)",
+      "Bash(grep:*)"
     ]
   }
 }
