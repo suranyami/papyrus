@@ -36,11 +36,12 @@ Any Waveshare ePaper display should be driveable from Elixir in under 10 lines o
 - [ ] Border/edge, gray ramp, color layer, text/font probe patterns (v2)
 
 **Library quality (Hex.pm readiness)**
-- ✓ ExUnit test suite: 107 tests, 0 failures on macOS with no hardware — Protocol, DisplaySpec, Display (mock port), TestPattern, Bitmap — Phase 3 (2026-03-29)
+- ✓ ExUnit test suite: 109 tests, 0 failures on macOS; 2 hardware tests excluded by default — Phase 4 (2026-03-30)
 - ✓ Mock port (`test/support/mock_port_script.exs`) with configurable per-test responses — Phase 2 (2026-03-29)
 - ✓ Two-tier test taxonomy (CI-safe vs hardware-required) documented in TESTING.md — Phase 2 (2026-03-29)
-- [ ] ExDoc documentation with getting-started guide, hardware setup, and display model reference
-- [ ] Working `examples/hello_papyrus` example app
+- ✓ ExDoc documentation with getting-started, loading-images, and hardware-testing guides; `mix docs` generates cleanly — Phase 4 (2026-03-30)
+- ✓ `examples/hello_papyrus.exs` + `examples/load_images.exs` scripts; CC0 sample images in `examples/images/`; hardware bitmap render test — Phase 4 (2026-03-30)
+- ✓ Hex.pm package configured: `c_src/` + `guides/` + `examples/` in package files, `make_error_message` for build failures — Phase 4 (2026-03-30)
 
 ### Out of Scope
 
@@ -74,4 +75,4 @@ Any Waveshare ePaper display should be driveable from Elixir in under 10 lines o
 | Config-driven display abstraction | 40+ drivers with mostly-shared logic — parameterise constants, subclass for structural differences | — Pending |
 
 ---
-*Last updated: 2026-03-29 after Phase 3 completion — 107-test suite green on macOS, Bitmap pipeline implemented (blank/1, from_image/2,3, letterbox resize, Floyd-Steinberg dithering, MSB-first packing)*
+*Last updated: 2026-03-30 after Phase 4 completion — Hex.pm-ready: ExDoc guides, examples scripts, CC0 sample images, hardware bitmap render test, package config complete*
