@@ -16,7 +16,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2: Test Infrastructure and TestPattern** - Mock port binary for hardware-free CI; `Papyrus.TestPattern` fill patterns; full ExUnit suite; two-tier test taxonomy
 - [ ] **Phase 3: Bitmap Rendering Pipeline** - `Papyrus.Bitmap` converts PNG/BMP to packed 1-bit ePaper binary buffers using spec-aware encoding
 - [x] **Phase 4: Documentation and Hex.pm Readiness** - ExDoc guides, `examples/hello_papyrus`, and complete Hex.pm packaging (completed 2026-03-30)
-- [ ] **Phase 5: Hardware SPI Optimization** - Replace bit-banged software SPI with lgpio hardware SPI; reduce bitmap transfer from ~10s to ~150ms
+- [ ] **Phase 5: Headless HTML Rendering** - Add headless HTML rendering as an option for displaying the contents on the ePaper display
+- [ ] **Phase 6: Hardware SPI Optimization** - Replace bit-banged software SPI with lgpio hardware SPI; reduce bitmap transfer from ~10s to ~150ms
 
 ## Phase Details
 
@@ -67,19 +68,6 @@ Plans:
 - [x] 03-01-PLAN.md — Add stb_image dep, Loader behaviour, StbLoader, blank/1, test fixtures
 - [x] 03-02-PLAN.md — Implement resize, threshold, dither, bit packing, wire from_image/2,3
 
-### Phase 5: Hardware SPI Optimization
-**Goal**: Replace the bit-banged software SPI in `DEV_Config.c` with lgpio hardware SPI so bitmap transfers take ~150ms instead of ~10s
-**Depends on**: Phase 4
-**Requirements**: TBD
-**Success Criteria** (what must be TRUE):
-  1. A full clear + display cycle (640k bytes) completes SPI transfer in under 500ms on a Raspberry Pi at 10 MHz
-  2. The 4 sub-panel CS pins continue to be asserted correctly per-transfer (GPIO-controlled CS, hardware SPI for data)
-  3. All existing display, clear, and sleep operations pass hardware smoke tests
-  4. The software SPI path is removed; no regression on non-Linux platforms (compilation still skipped on macOS)
-
-**Background:** `DEV_SPI_WriteByte` is bit-banged — each byte requires 27 `lgGpioWrite()` syscalls (~1–2 µs each), costing ~50 µs/byte. At 320,784 bytes per refresh this takes 5–10 seconds just to transfer data before the panel refresh even starts. Switching to `lgSpiOpen`/`lgSpiWrite` bulk transfers at 10+ MHz would reduce this to ~150ms.
-**Plans**: TBD
-
 ### Phase 4: Documentation and Hex.pm Readiness
 **Goal**: A new Elixir developer can find Papyrus on Hex.pm, add it as a dependency, follow the getting-started guide, and drive their first display
 **Depends on**: Phase 3
@@ -95,10 +83,39 @@ Plans:
 - [x] 04-01-PLAN.md — Update mix.exs packaging, create example scripts and CC0 sample images
 - [x] 04-02-PLAN.md — Create ExDoc guides, update README.md, create hardware bitmap render test
 
+### Phase 5: Headless HTML Rendering
+**Goal**: Add `Papyrus.Renderer.Headless` -- a module that captures HTML/URL/file to PNG screenshot via ChromicPDF (headless Chromium) and feeds the result through the existing `Papyrus.Bitmap` pipeline, producing a ready-to-display ePaper binary buffer. ChromicPDF is an optional dependency.
+**Depends on:** Phase 4
+**Requirements**: RENDER-04
+**Success Criteria** (what must be TRUE):
+  1. `Papyrus.Renderer.Headless.render_html({:html, "<h1>Hello</h1>"}, spec)` returns `{:ok, binary}` where `byte_size(binary) == spec.buffer_size`
+  2. `render_html/2` accepts `{:html, _}`, `{:url, _}`, and `{:file, _}` tagged-tuple inputs
+  3. When `chromic_pdf` is not installed, `render_html/2` returns `{:error, "chromic_pdf not available..."}` -- no crash, no startup warning
+  4. `chromic_pdf` is `optional: true` in `mix.exs` and is not pulled transitively for users who do not need headless rendering
+  5. `mix test` passes on a machine without Chromium installed (tests mock ChromicPDF interaction)
+**Plans:** 2 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Implement Papyrus.Renderer.Headless module, wire ChromicPDF optional dep, update Application supervision
+- [ ] 05-02-PLAN.md — ExUnit tests for all input types, error paths, and display wrapper (no Chromium required)
+
+### Phase 6: Hardware SPI Optimization
+**Goal**: Replace the bit-banged software SPI in `DEV_Config.c` with lgpio hardware SPI so bitmap transfers take ~150ms instead of ~10s
+**Depends on**: Phase 5
+**Requirements**: TBD
+**Success Criteria** (what must be TRUE):
+  1. A full clear + display cycle (640k bytes) completes SPI transfer in under 500ms on a Raspberry Pi at 10 MHz
+  2. The 4 sub-panel CS pins continue to be asserted correctly per-transfer (GPIO-controlled CS, hardware SPI for data)
+  3. All existing display, clear, and sleep operations pass hardware smoke tests
+  4. The software SPI path is removed; no regression on non-Linux platforms (compilation still skipped on macOS)
+
+**Background:** `DEV_SPI_WriteByte` is bit-banged -- each byte requires 27 `lgGpioWrite()` syscalls (~1-2 us each), costing ~50 us/byte. At 320,784 bytes per refresh this takes 5-10 seconds just to transfer data before the panel refresh even starts. Switching to `lgSpiOpen`/`lgSpiWrite` bulk transfers at 10+ MHz would reduce this to ~150ms.
+**Plans**: TBD
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -106,4 +123,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Test Infrastructure and TestPattern | 2/3 | In Progress|  |
 | 3. Bitmap Rendering Pipeline | 1/2 | In Progress|  |
 | 4. Documentation and Hex.pm Readiness | 2/2 | Complete   | 2026-03-30 |
-| 5. Hardware SPI Optimization | 0/? | Not started | - |
+| 5. Headless HTML Rendering | 0/2 | Planned | - |
+| 6. Hardware SPI Optimization | 0/? | Not started | - |

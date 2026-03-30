@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v0.1.0
 milestone_name: milestone
-status: Ready to plan
-stopped_at: Completed 04-documentation-and-hex-pm-readiness/04-02-PLAN.md
-last_updated: "2026-03-30T02:41:04.073Z"
+status: Ready to execute
+stopped_at: Planned phase 05-headless-html-rendering
+last_updated: "2026-03-30T20:30:00.000Z"
 progress:
-  total_phases: 5
+  total_phases: 6
   completed_phases: 4
-  total_plans: 9
+  total_plans: 11
   completed_plans: 9
 ---
 
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-28)
 
 **Core value:** Any Waveshare ePaper display should be driveable from Elixir in under 10 lines of code, with the hardware abstraction solid enough that adding a new display model requires only a config module — not C code changes.
-**Current focus:** Phase 04 — documentation-and-hex-pm-readiness
+**Current focus:** Phase 05 — headless-html-rendering
 
 ## Current Position
 
 Phase: 5
-Plan: Not started
+Plan: Planned (05-01, 05-02 ready for execution)
 
 ## Performance Metrics
 
@@ -85,6 +85,12 @@ Recent decisions affecting current work:
 - [Phase 04-documentation-and-hex-pm-readiness]: make_error_message only fires on make failure (non-zero exit), not on macOS graceful skip (exit 0) — Makefile @echo handles macOS messaging
 - [Phase 04-documentation-and-hex-pm-readiness]: hardware-testing guide documents @moduletag :hardware convention matching existing two-tier taxonomy from Phase 2
 - [Phase 04-documentation-and-hex-pm-readiness]: bitmap_render_test uses Application.get_env(:papyrus, :test_display_module) for display configurability (D-06)
+- [Phase 05-headless-html-rendering]: Phase planned with 2 plans — implementation (05-01) then tests (05-02)
+
+### Roadmap Evolution
+
+- Phase 6 added: Add headless HTML rendering as an option for displaying the contents on the ePaper display
+- Phase 5 (Hardware SPI Optimization) moved to end (now Phase 6); headless HTML rendering is now Phase 5
 
 ### Pending Todos
 
@@ -97,6 +103,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-30T02:30:34.208Z
-Stopped at: Completed 04-documentation-and-hex-pm-readiness/04-02-PLAN.md
+Last session: 2026-03-30T20:30:00.000Z
+Stopped at: Planned phase 05-headless-html-rendering
 Resume file: None
