@@ -63,10 +63,20 @@ mise install
 # mix.exs
 def deps do
   [
-    {:papyrus, "~> 0.1"}
+    {:papyrus, "~> 0.2"}
   ]
 end
 ```
+
+On macOS, the C port is not compiled — see the [Getting Started](guides/getting-started.md) guide.
+
+## Documentation
+
+- [Getting Started](guides/getting-started.md) — Installation, wiring, first display
+- [Loading Images](guides/loading-images.md) — Convert PNGs to ePaper buffers
+- [Hardware Testing](guides/hardware-testing.md) — Run tests on real hardware
+
+Full API docs: [hexdocs.pm/papyrus](https://hexdocs.pm/papyrus)
 
 ## Usage
 
