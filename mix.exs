@@ -11,6 +11,12 @@ defmodule Papyrus.MixProject do
       elixir: "~> 1.15",
       compilers: [:elixir_make | Mix.compilers()],
       make_cwd: "c_src",
+      make_error_message: """
+      C port compilation failed.
+      lgpio (liblgpio-dev) is required on Linux/Raspberry Pi.
+      Install it with: sudo apt install liblgpio-dev
+      On macOS, compilation is skipped — display hardware requires Raspberry Pi.
+      """,
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
@@ -31,9 +37,9 @@ defmodule Papyrus.MixProject do
 
   defp deps do
     [
-      {:elixir_make, "~> 0.7", runtime: false},
+      {:elixir_make, "~> 0.9", runtime: false},
       {:stb_image, "~> 0.6"},
-      {:ex_doc, "~> 0.31", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.34", only: :dev, runtime: false}
     ]
   end
 
@@ -43,10 +49,13 @@ defmodule Papyrus.MixProject do
         "lib",
         "c_src",
         "priv/.gitkeep",
+        "guides",
+        "examples",
         "mix.exs",
         "README.md",
         "CHANGELOG.md",
-        "LICENSE"
+        "LICENSE",
+        ".formatter.exs"
       ],
       licenses: ["MIT"],
       links: %{
@@ -58,16 +67,21 @@ defmodule Papyrus.MixProject do
 
   defp docs do
     [
-      main: "readme",
+      main: "getting-started",
       source_url: @source_url,
       source_ref: "v#{@version}",
       extras: [
         "README.md",
         "CHANGELOG.md",
-        "guides/getting_started.md",
-        "guides/hardware_setup.md"
+        "guides/getting-started.md",
+        "guides/loading-images.md",
+        "guides/hardware-testing.md"
+      ],
+      groups_for_extras: [
+        Guides: ~r/guides\//
       ],
       groups_for_modules: [
+        "Public API": [Papyrus, Papyrus.Bitmap, Papyrus.TestPattern],
         "Display Specs": [Papyrus.DisplaySpec, Papyrus.Displays.Waveshare12in48],
         Internals: [Papyrus.Display, Papyrus.Protocol, Papyrus.Application]
       ]
