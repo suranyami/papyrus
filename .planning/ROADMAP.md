@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: DisplaySpec and C Port Foundation** - Extend `DisplaySpec` with color/pin/partial-refresh fields; harden the C port with stdin-sentinel to prevent zombie processes (completed 2026-03-28)
 - [ ] **Phase 2: Test Infrastructure and TestPattern** - Mock port binary for hardware-free CI; `Papyrus.TestPattern` fill patterns; full ExUnit suite; two-tier test taxonomy
 - [ ] **Phase 3: Bitmap Rendering Pipeline** - `Papyrus.Bitmap` converts PNG/BMP to packed 1-bit ePaper binary buffers using spec-aware encoding
-- [ ] **Phase 4: Documentation and Hex.pm Readiness** - ExDoc guides, `examples/hello_papyrus`, and complete Hex.pm packaging
+- [x] **Phase 4: Documentation and Hex.pm Readiness** - ExDoc guides, `examples/hello_papyrus`, and complete Hex.pm packaging (completed 2026-03-30)
 - [ ] **Phase 5: Hardware SPI Optimization** - Replace bit-banged software SPI with lgpio hardware SPI; reduce bitmap transfer from ~10s to ~150ms
 
 ## Phase Details
@@ -89,11 +89,11 @@ Plans:
   2. `examples/hello_papyrus` compiles and demonstrates the `init → clear → display → sleep` lifecycle with inline comments explaining each step
   3. Adding `{:papyrus, "~> 0.2"}` to a project on a Mac (no lgpio) produces a clear error message pointing to the Raspberry Pi requirement, not a cryptic compile failure
   4. `mix hex.publish` succeeds with `c_src/` and all required files present in the package
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [x] 04-01-PLAN.md — Update mix.exs packaging, create example scripts and CC0 sample images
-- [ ] 04-02-PLAN.md — Create ExDoc guides, update README.md, create hardware bitmap render test
+- [x] 04-02-PLAN.md — Create ExDoc guides, update README.md, create hardware bitmap render test
 
 ## Progress
 
@@ -105,5 +105,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. DisplaySpec and C Port Foundation | 2/2 | Complete   | 2026-03-28 |
 | 2. Test Infrastructure and TestPattern | 2/3 | In Progress|  |
 | 3. Bitmap Rendering Pipeline | 1/2 | In Progress|  |
-| 4. Documentation and Hex.pm Readiness | 1/2 | In Progress|  |
+| 4. Documentation and Hex.pm Readiness | 2/2 | Complete   | 2026-03-30 |
 | 5. Hardware SPI Optimization | 0/? | Not started | - |

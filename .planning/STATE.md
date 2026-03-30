@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v0.1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 04-documentation-and-hex-pm-readiness/04-01-PLAN.md
-last_updated: "2026-03-30T02:07:11.611Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 04-documentation-and-hex-pm-readiness/04-02-PLAN.md
+last_updated: "2026-03-30T02:30:34.210Z"
 progress:
   total_phases: 5
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 9
-  completed_plans: 8
+  completed_plans: 9
 ---
 
 # Project State
@@ -54,6 +54,7 @@ Plan: 2 of 2
 | Phase 03-bitmap-rendering-pipeline P01 | 208 | 2 tasks | 9 files |
 | Phase 03-bitmap-rendering-pipeline P02 | 480 | 2 tasks | 10 files |
 | Phase 04-documentation-and-hex-pm-readiness P01 | 65 | 2 tasks | 7 files |
+| Phase 04-documentation-and-hex-pm-readiness P02 | 18 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -82,6 +83,8 @@ Recent decisions affecting current work:
 - [Phase 03-bitmap-rendering-pipeline]: resize.ex assertion guard: ^expected_size = byte_size(result) — catches padding dimension math bugs at dev-time
 - [Phase 04-documentation-and-hex-pm-readiness]: Programmatically generated CC0 PNG sample images using StbImage when Wikimedia Commons download failed; original works (radial botanical, geometric mechanical) at different aspect ratios
 - [Phase 04-documentation-and-hex-pm-readiness]: make_error_message only fires on make failure (non-zero exit), not on macOS graceful skip (exit 0) — Makefile @echo handles macOS messaging
+- [Phase 04-documentation-and-hex-pm-readiness]: hardware-testing guide documents @moduletag :hardware convention matching existing two-tier taxonomy from Phase 2
+- [Phase 04-documentation-and-hex-pm-readiness]: bitmap_render_test uses Application.get_env(:papyrus, :test_display_module) for display configurability (D-06)
 
 ### Pending Todos
 
@@ -94,6 +97,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-30T02:07:11.608Z
-Stopped at: Completed 04-documentation-and-hex-pm-readiness/04-01-PLAN.md
+Last session: 2026-03-30T02:30:34.208Z
+Stopped at: Completed 04-documentation-and-hex-pm-readiness/04-02-PLAN.md
 Resume file: None

@@ -29,7 +29,7 @@
 
 ### Documentation & Packaging
 
-- [ ] **DOCS-01**: ExDoc API docs generated with getting-started, hardware setup, and display model reference guides
+- [x] **DOCS-01**: ExDoc API docs generated with getting-started, hardware setup, and display model reference guides
 - [x] **DOCS-02**: Hex.pm package configured with `make_error_message` for missing `liblgpio`, `c_src/` in package files
 - [x] **DOCS-03**: `examples/hello_papyrus` demonstrates basic `init → clear → display → sleep` flow
 
@@ -82,7 +82,7 @@ Deferred to the next milestone. These depend on v1's stable `DisplaySpec` contra
 | PATTERN-03 | Phase 2 | Complete |
 | BITMAP-01 | Phase 3 | Complete |
 | BITMAP-02 | Phase 3 | Complete |
-| DOCS-01 | Phase 4 | Pending |
+| DOCS-01 | Phase 4 | Complete |
 | DOCS-02 | Phase 4 | Complete |
 | DOCS-03 | Phase 4 | Complete |
 

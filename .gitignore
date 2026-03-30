@@ -1,6 +1,7 @@
 # Build artifacts
 /_build/
 /deps/
+/doc/
 /priv/epd_port
 /priv/.epd_port_stub
 
