@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v0.1.0
 milestone_name: milestone
-status: Ready to plan
-stopped_at: Completed 03-bitmap-rendering-pipeline/03-02-PLAN.md
-last_updated: "2026-03-29T09:24:04.878Z"
+status: Ready to execute
+stopped_at: Completed 04-documentation-and-hex-pm-readiness/04-01-PLAN.md
+last_updated: "2026-03-30T02:07:11.611Z"
 progress:
   total_phases: 5
   completed_phases: 3
-  total_plans: 7
-  completed_plans: 7
+  total_plans: 9
+  completed_plans: 8
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-28)
 
 **Core value:** Any Waveshare ePaper display should be driveable from Elixir in under 10 lines of code, with the hardware abstraction solid enough that adding a new display model requires only a config module — not C code changes.
-**Current focus:** Phase 03 — bitmap-rendering-pipeline
+**Current focus:** Phase 04 — documentation-and-hex-pm-readiness
 
 ## Current Position
 
-Phase: 5
-Plan: Not started
+Phase: 04 (documentation-and-hex-pm-readiness) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
@@ -53,6 +53,7 @@ Plan: Not started
 | Phase 02-test-infrastructure-and-testpattern P03 | 10 | 2 tasks | 6 files |
 | Phase 03-bitmap-rendering-pipeline P01 | 208 | 2 tasks | 9 files |
 | Phase 03-bitmap-rendering-pipeline P02 | 480 | 2 tasks | 10 files |
+| Phase 04-documentation-and-hex-pm-readiness P01 | 65 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,8 @@ Recent decisions affecting current work:
 - [Phase 03-bitmap-rendering-pipeline]: StbImage fixture generation uses StbImage.new/2, not from_binary/2 which does not exist in stb_image 0.6.10
 - [Phase 03-bitmap-rendering-pipeline]: Floyd-Steinberg row-by-row reduce with next_row_errors list — avoids %{{x,y} => val} map, constant memory per row
 - [Phase 03-bitmap-rendering-pipeline]: resize.ex assertion guard: ^expected_size = byte_size(result) — catches padding dimension math bugs at dev-time
+- [Phase 04-documentation-and-hex-pm-readiness]: Programmatically generated CC0 PNG sample images using StbImage when Wikimedia Commons download failed; original works (radial botanical, geometric mechanical) at different aspect ratios
+- [Phase 04-documentation-and-hex-pm-readiness]: make_error_message only fires on make failure (non-zero exit), not on macOS graceful skip (exit 0) — Makefile @echo handles macOS messaging
 
 ### Pending Todos
 
@@ -91,6 +94,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-29T09:18:45.518Z
-Stopped at: Completed 03-bitmap-rendering-pipeline/03-02-PLAN.md
+Last session: 2026-03-30T02:07:11.608Z
+Stopped at: Completed 04-documentation-and-hex-pm-readiness/04-01-PLAN.md
 Resume file: None

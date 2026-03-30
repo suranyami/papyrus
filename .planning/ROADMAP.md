@@ -89,10 +89,10 @@ Plans:
   2. `examples/hello_papyrus` compiles and demonstrates the `init → clear → display → sleep` lifecycle with inline comments explaining each step
   3. Adding `{:papyrus, "~> 0.2"}` to a project on a Mac (no lgpio) produces a clear error message pointing to the Raspberry Pi requirement, not a cryptic compile failure
   4. `mix hex.publish` succeeds with `c_src/` and all required files present in the package
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
-- [ ] 04-01-PLAN.md — Update mix.exs packaging, create example scripts and CC0 sample images
+- [x] 04-01-PLAN.md — Update mix.exs packaging, create example scripts and CC0 sample images
 - [ ] 04-02-PLAN.md — Create ExDoc guides, update README.md, create hardware bitmap render test
 
 ## Progress
@@ -105,5 +105,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. DisplaySpec and C Port Foundation | 2/2 | Complete   | 2026-03-28 |
 | 2. Test Infrastructure and TestPattern | 2/3 | In Progress|  |
 | 3. Bitmap Rendering Pipeline | 1/2 | In Progress|  |
-| 4. Documentation and Hex.pm Readiness | 0/2 | Not started | - |
+| 4. Documentation and Hex.pm Readiness | 1/2 | In Progress|  |
 | 5. Hardware SPI Optimization | 0/? | Not started | - |
