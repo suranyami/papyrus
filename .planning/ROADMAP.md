@@ -84,20 +84,22 @@ Plans:
 - [x] 04-02-PLAN.md — Create ExDoc guides, update README.md, create hardware bitmap render test
 
 ### Phase 5: Headless HTML Rendering
-**Goal**: Add `Papyrus.Renderer.Headless` -- a module that captures HTML/URL/file to PNG screenshot via ChromicPDF (headless Chromium) and feeds the result through the existing `Papyrus.Bitmap` pipeline, producing a ready-to-display ePaper binary buffer. ChromicPDF is an optional dependency.
+**Goal**: Add `Papyrus.Renderer.Headless` with hybrid rendering: SVG backend via `resvg` (embedded-friendly, ~3MB) and `wkhtmltoimage` backend (full CSS, ~100MB optional). Enables HTML/content rendering on ePaper displays without browser dependencies.
 **Depends on:** Phase 4
 **Requirements**: RENDER-04
 **Success Criteria** (what must be TRUE):
   1. `Papyrus.Renderer.Headless.render_html({:html, "<h1>Hello</h1>"}, spec)` returns `{:ok, binary}` where `byte_size(binary) == spec.buffer_size`
-  2. `render_html/2` accepts `{:html, _}`, `{:url, _}`, and `{:file, _}` tagged-tuple inputs
-  3. When `chromic_pdf` is not installed, `render_html/2` returns `{:error, "chromic_pdf not available..."}` -- no crash, no startup warning
-  4. `chromic_pdf` is `optional: true` in `mix.exs` and is not pulled transitively for users who do not need headless rendering
-  5. `mix test` passes on a machine without Chromium installed (tests mock ChromicPDF interaction)
-**Plans:** 2 plans
+  2. `render_html/3` accepts `{:html, _}`, `{:url, _}`, and `{:file, _}` inputs with `:backend` option (`:auto`, `:svg`, `:wkhtmltoimage`)
+  3. Default `:auto` backend prefers wkhtmltoimage if available, falls back to resvg
+  4. `resvg` is a dependency in `mix.exs`; `wkhtmltoimage` is optional (system binary, gracefully detected)
+  5. `mix test` passes without wkhtmltoimage installed (SVG backend always works; wkhtml tests skipped if unavailable)
+  6. HTML test patterns (`simple_message`, `dashboard_tile`, `lorem_ipsum_layout`) render correctly via SVG backend
+**Plans:** 3 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Implement Papyrus.Renderer.Headless module, wire ChromicPDF optional dep, update Application supervision
-- [ ] 05-02-PLAN.md — ExUnit tests for all input types, error paths, and display wrapper (no Chromium required)
+- [ ] 05-01-PLAN.md — Implement SVG backend with resvg, HTML-to-SVG conversion, test patterns
+- [ ] 05-02-PLAN.md — Add wkhtmltoimage backend for full CSS support, backend selection logic
+- [ ] 05-03-PLAN.md — ExUnit tests for both backends, backend selection, graceful degradation
 
 ### Phase 6: Hardware SPI Optimization
 **Goal**: Replace the bit-banged software SPI in `DEV_Config.c` with lgpio hardware SPI so bitmap transfers take ~150ms instead of ~10s
