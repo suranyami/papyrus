@@ -4,6 +4,7 @@
 /doc/
 /priv/epd_port
 /priv/.epd_port_stub
+/test_pattern_exports/
 
 # Mix
 *.ez
@@ -20,3 +21,8 @@ erl_crash.dump
 
 # Claude worktrees
 .claude/worktrees/
+
+
+# Node.js
+priv/node/node_modules/
+priv/node/package-lock.json
