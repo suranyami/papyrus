@@ -21,7 +21,8 @@ defmodule Papyrus.MixProject do
       deps: deps(),
       package: package(),
       docs: docs(),
-      description: "Elixir/Nerves library for driving Waveshare ePaper displays via a supervised OS port process",
+      description:
+        "Elixir/Nerves library for driving Waveshare ePaper displays via a supervised OS port process",
       name: "Papyrus",
       source_url: @source_url,
       homepage_url: "https://hexdocs.pm/papyrus"
@@ -39,6 +40,7 @@ defmodule Papyrus.MixProject do
     [
       {:elixir_make, "~> 0.9", runtime: false},
       {:stb_image, "~> 0.6"},
+      {:resvg, "~> 0.5"},
       {:ex_doc, "~> 0.34", only: :dev, runtime: false}
     ]
   end
@@ -75,13 +77,14 @@ defmodule Papyrus.MixProject do
         "CHANGELOG.md",
         "guides/getting-started.md",
         "guides/loading-images.md",
-        "guides/hardware-testing.md"
+        "guides/hardware-testing.md",
+        "guides/html-rendering.md"
       ],
       groups_for_extras: [
         Guides: ~r/guides\//
       ],
       groups_for_modules: [
-        "Public API": [Papyrus, Papyrus.Bitmap, Papyrus.TestPattern],
+        "Public API": [Papyrus, Papyrus.Bitmap, Papyrus.Renderer.Headless, Papyrus.TestPattern],
         "Display Specs": [Papyrus.DisplaySpec, Papyrus.Displays.Waveshare12in48],
         Internals: [Papyrus.Display, Papyrus.Protocol, Papyrus.Application]
       ]
