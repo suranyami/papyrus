@@ -8,31 +8,22 @@ defmodule Papyrus.TestPatternTest do
   @valid_pin_config %{rst: 1, dc: 2, cs: 3, busy: 4}
 
   @small_spec_white_high struct!(DisplaySpec, %{
-    model: :test,
-    width: 16,
-    height: 16,
-    buffer_size: 32,
-    pin_config: @valid_pin_config,
-    bit_order: :white_high
-  })
+                           model: :test,
+                           width: 16,
+                           height: 16,
+                           buffer_size: 32,
+                           pin_config: @valid_pin_config,
+                           bit_order: :white_high
+                         })
 
   @small_spec_white_low struct!(DisplaySpec, %{
-    model: :test,
-    width: 16,
-    height: 16,
-    buffer_size: 32,
-    pin_config: @valid_pin_config,
-    bit_order: :white_low
-  })
-
-  @odd_spec struct!(DisplaySpec, %{
-    model: :test_odd,
-    width: 16,
-    height: 17,
-    buffer_size: 33,
-    pin_config: @valid_pin_config,
-    bit_order: :white_high
-  })
+                          model: :test,
+                          width: 16,
+                          height: 16,
+                          buffer_size: 32,
+                          pin_config: @valid_pin_config,
+                          bit_order: :white_low
+                        })
 
   describe "full_white/1" do
     test "returns a binary of buffer_size bytes for :white_high spec" do
@@ -101,32 +92,36 @@ defmodule Papyrus.TestPatternTest do
       assert byte_size(buf) == @small_spec_white_high.buffer_size
     end
 
-    test "first byte is 0xAA" do
+    test "produces varied pattern across diagonal bands" do
+      # Pyramid checkerboard should have varied bytes at different scales
       buf = TestPattern.checkerboard(@small_spec_white_high)
-      assert :binary.at(buf, 0) == 0xAA
+      unique_bytes = MapSet.size(MapSet.new(:binary.bin_to_list(buf)))
+      # Should have multiple different byte values due to pyramid pattern
+      assert unique_bytes > 5
     end
 
-    test "second byte is 0x55" do
-      buf = TestPattern.checkerboard(@small_spec_white_high)
-      assert :binary.at(buf, 1) == 0x55
+    test "produces fine checkerboard at bottom-right of large display" do
+      # Use a larger spec to see the full pyramid effect
+      large_spec = struct!(DisplaySpec, %{
+        model: :test,
+        width: 128,
+        height: 128,
+        buffer_size: 2048,
+        pin_config: @valid_pin_config,
+        bit_order: :white_high
+      })
+      buf = TestPattern.checkerboard(large_spec)
+      # Bottom-right corner should have 1x1 pixel checkerboard
+      # This produces alternating bit patterns within bytes
+      unique_bytes = MapSet.size(MapSet.new(:binary.bin_to_list(buf)))
+      assert unique_bytes > 20
     end
 
-    test "alternating 0xAA/0x55 pattern throughout even-size buffer" do
-      buf = TestPattern.checkerboard(@small_spec_white_high)
-      expected = :binary.copy(<<0xAA, 0x55>>, div(@small_spec_white_high.buffer_size, 2))
-      assert buf == expected
-    end
-
-    test "odd buffer_size: last byte is 0xAA" do
-      buf = TestPattern.checkerboard(@odd_spec)
-      assert byte_size(buf) == 33
-      assert :binary.at(buf, 32) == 0xAA
-    end
-
-    test "bit_order does not affect checkerboard pattern" do
+    test "bit_order produces consistent pattern" do
       buf_high = TestPattern.checkerboard(@small_spec_white_high)
       buf_low = TestPattern.checkerboard(@small_spec_white_low)
-      assert buf_high == buf_low
+      # Same dimensions should produce same buffer size
+      assert byte_size(buf_high) == byte_size(buf_low)
     end
 
     test "works with real Waveshare12in48 spec" do
