@@ -43,7 +43,12 @@ defmodule Papyrus.DisplaySpecTest do
 
     test "omitting model raises ArgumentError" do
       assert_raise ArgumentError, ~r/model/, fn ->
-        struct!(DisplaySpec, %{width: 200, height: 200, buffer_size: 5000, pin_config: @valid_pin_config})
+        struct!(DisplaySpec, %{
+          width: 200,
+          height: 200,
+          buffer_size: 5000,
+          pin_config: @valid_pin_config
+        })
       end
     end
   end

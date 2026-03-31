@@ -11,19 +11,23 @@ defmodule Papyrus.DisplayTest do
 
   describe "start_link/1 with mock port (happy path)" do
     test "starts successfully with mock port" do
-      {:ok, pid} = Display.start_link(
-        display_module: Waveshare12in48,
-        port_binary: MockPort.port_executable()
-      )
+      {:ok, pid} =
+        Display.start_link(
+          display_module: Waveshare12in48,
+          port_binary: MockPort.port_executable()
+        )
+
       assert Process.alive?(pid)
       GenServer.stop(pid)
     end
 
     test "spec/1 returns the display spec" do
-      {:ok, pid} = Display.start_link(
-        display_module: Waveshare12in48,
-        port_binary: MockPort.port_executable()
-      )
+      {:ok, pid} =
+        Display.start_link(
+          display_module: Waveshare12in48,
+          port_binary: MockPort.port_executable()
+        )
+
       spec = Display.spec(pid)
       assert spec.model == :waveshare_12in48
       assert spec.width == 1304
@@ -33,10 +37,12 @@ defmodule Papyrus.DisplayTest do
 
   describe "commands with mock port (happy path)" do
     setup do
-      {:ok, pid} = Display.start_link(
-        display_module: Waveshare12in48,
-        port_binary: MockPort.port_executable()
-      )
+      {:ok, pid} =
+        Display.start_link(
+          display_module: Waveshare12in48,
+          port_binary: MockPort.port_executable()
+        )
+
       on_exit(fn -> if Process.alive?(pid), do: GenServer.stop(pid) end)
       {:ok, display: pid}
     end
@@ -67,10 +73,11 @@ defmodule Papyrus.DisplayTest do
       response_file = MockPort.write_response_file(responses, "clear_error")
       mock_path = MockPort.port_executable(response_file)
 
-      {:ok, pid} = Display.start_link(
-        display_module: Waveshare12in48,
-        port_binary: mock_path
-      )
+      {:ok, pid} =
+        Display.start_link(
+          display_module: Waveshare12in48,
+          port_binary: mock_path
+        )
 
       # :init was not configured to fail, so start_link succeeds (default {:ok, ""})
       assert Process.alive?(pid)
@@ -89,10 +96,11 @@ defmodule Papyrus.DisplayTest do
       response_file = MockPort.write_response_file(responses, "sleep_error")
       mock_path = MockPort.port_executable(response_file)
 
-      {:ok, pid} = Display.start_link(
-        display_module: Waveshare12in48,
-        port_binary: mock_path
-      )
+      {:ok, pid} =
+        Display.start_link(
+          display_module: Waveshare12in48,
+          port_binary: mock_path
+        )
 
       assert Process.alive?(pid)
 

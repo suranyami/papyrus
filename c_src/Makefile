@@ -27,7 +27,7 @@ $(TARGET): $(SRCS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 else
 all: $(PRIV_DIR)
-	@echo "Skipping C port compilation on $(UNAME_S) — lgpio is Linux/Raspberry Pi only"
+	@echo "Skipping C port compilation on $(UNAME_S): lgpio is Linux/Raspberry Pi only"
 	@touch $(PRIV_DIR)/.epd_port_stub
 endif
 

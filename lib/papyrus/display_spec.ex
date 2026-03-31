@@ -24,8 +24,16 @@ defmodule Papyrus.DisplaySpec do
   """
 
   @enforce_keys [:model, :width, :height, :buffer_size, :pin_config, :bit_order]
-  defstruct [:model, :width, :height, :buffer_size, :pin_config, :bit_order,
-             color_mode: :black_white, partial_refresh: false]
+  defstruct [
+    :model,
+    :width,
+    :height,
+    :buffer_size,
+    :pin_config,
+    :bit_order,
+    color_mode: :black_white,
+    partial_refresh: false
+  ]
 
   @typedoc """
   A flat atom-keyed map of GPIO pin numbers.

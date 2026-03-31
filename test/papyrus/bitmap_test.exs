@@ -121,13 +121,19 @@ defmodule Papyrus.BitmapTest do
   describe "from_image/3" do
     test "dither: true returns binary of correct size" do
       spec = test_spec(width: 8, height: 8, bit_order: :white_high)
-      assert {:ok, buf} = Papyrus.Bitmap.from_image(fixture_path("gradient_4x8.png"), spec, dither: true)
+
+      assert {:ok, buf} =
+               Papyrus.Bitmap.from_image(fixture_path("gradient_4x8.png"), spec, dither: true)
+
       assert byte_size(buf) == spec.buffer_size
     end
 
     test "dither: true with all-white input produces all-0xFF" do
       spec = test_spec(width: 8, height: 8, bit_order: :white_high)
-      assert {:ok, buf} = Papyrus.Bitmap.from_image(fixture_path("white_4x8.png"), spec, dither: true)
+
+      assert {:ok, buf} =
+               Papyrus.Bitmap.from_image(fixture_path("white_4x8.png"), spec, dither: true)
+
       assert byte_size(buf) == spec.buffer_size
       # All-white input has no quantization error -> same as threshold
       assert buf == :binary.copy(<<0xFF>>, spec.buffer_size)
@@ -135,7 +141,10 @@ defmodule Papyrus.BitmapTest do
 
     test "dither: true with gradient PNG returns {:ok, binary}" do
       spec = test_spec(width: 8, height: 8, bit_order: :white_high)
-      assert {:ok, buf} = Papyrus.Bitmap.from_image(fixture_path("gradient_4x8.png"), spec, dither: true)
+
+      assert {:ok, buf} =
+               Papyrus.Bitmap.from_image(fixture_path("gradient_4x8.png"), spec, dither: true)
+
       assert is_binary(buf)
     end
   end

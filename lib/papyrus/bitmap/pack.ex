@@ -60,6 +60,7 @@ defmodule Papyrus.Bitmap.Pack do
 
   defp pad_row(row, target_length, pad_value) do
     deficit = target_length - length(row)
+
     if deficit > 0 do
       row ++ List.duplicate(pad_value, deficit)
     else
@@ -116,7 +117,7 @@ defmodule Papyrus.Bitmap.Pack do
     {result, _carry} =
       Enum.reduce(row_with_errors, {[], 0}, fn {pixel, right_err}, {acc, carry} ->
         # The carry is the right-neighbor error from the previous pixel
-        final_val = if (pixel + carry) > 128, do: 255, else: 0
+        final_val = if pixel + carry > 128, do: 255, else: 0
         {acc ++ [final_val], right_err}
       end)
 

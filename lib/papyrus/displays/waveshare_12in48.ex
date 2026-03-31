@@ -47,11 +47,20 @@ defmodule Papyrus.Displays.Waveshare12in48 do
       partial_refresh: false,
       bit_order: :white_high,
       pin_config: %{
-        sck: 11, mosi: 10,
-        m1_cs: 8,  s1_cs: 7,  m2_cs: 17, s2_cs: 18,
-        m1s1_dc: 13, m2s2_dc: 22,
-        m1s1_rst: 6, m2s2_rst: 23,
-        m1_busy: 5, s1_busy: 19, m2_busy: 27, s2_busy: 24
+        sck: 11,
+        mosi: 10,
+        m1_cs: 8,
+        s1_cs: 7,
+        m2_cs: 17,
+        s2_cs: 18,
+        m1s1_dc: 13,
+        m2s2_dc: 22,
+        m1s1_rst: 6,
+        m2s2_rst: 23,
+        m1_busy: 5,
+        s1_busy: 19,
+        m2_busy: 27,
+        s2_busy: 24
       }
     }
   end
