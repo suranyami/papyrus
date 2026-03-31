@@ -34,7 +34,14 @@
       "Bash(xxd)",
       "Bash(mix run -e \":*)",
       "Bash(elixir -e ':*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(mix run:*)",
+      "WebFetch(domain:hexdocs.pm)",
+      "Bash(mix:*)",
+      "Bash(open test_pattern_exports/simple_message.png)",
+      "Bash(npm install:*)",
+      "Bash(echo \"Exit code: $?\")",
+      "Bash(npm list:*)"
     ]
   }
 }
