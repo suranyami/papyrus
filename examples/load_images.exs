@@ -32,27 +32,34 @@ end
 
 IO.puts("Found #{length(images)} image(s)\n")
 
-Enum.each(images, fn path ->
-  name = Path.basename(path)
-  IO.puts("Loading: #{name}")
-  {:ok, buffer} = Papyrus.Bitmap.from_image(path, spec)
-  IO.puts("  Buffer: #{byte_size(buffer)} bytes")
+{shown, skipped} =
+  Enum.reduce(images, {0, 0}, fn path, {shown, skipped} ->
+    name = Path.basename(path)
+    IO.puts("Loading: #{name}")
 
-  # For :three_color displays, from_image/2 returns the black plane only.
-  # The red plane must be all-zero (no-red): 0x00 means "no red ink" on the
-  # hardware. Never duplicate the black plane — its 0xFF (white) bytes would
-  # be interpreted as red ink by the display, making white areas appear red.
-  display_buffer =
-    case spec.color_mode do
-      :three_color -> buffer <> Papyrus.Bitmap.blank_red_plane(spec)
-      _ -> buffer
+    with {:ok, buffer} <- Papyrus.Bitmap.from_image(path, spec),
+         IO.puts("  Buffer: #{byte_size(buffer)} bytes"),
+         display_buffer =
+           case spec.color_mode do
+             # For :three_color displays, from_image/2 returns the black plane only.
+             # The red plane must be all-zero (no-red): 0x00 means "no red ink" on the
+             # hardware. Never duplicate the black plane — its 0xFF (white) bytes would
+             # be interpreted as red ink by the display, making white areas appear red.
+             :three_color -> buffer <> Papyrus.Bitmap.blank_red_plane(spec)
+             _ -> buffer
+           end,
+         :ok <- Papyrus.Display.display(display, display_buffer) do
+      IO.puts("  Displayed. Waiting #{div(delay_ms, 1000)}s...")
+      Process.sleep(delay_ms)
+      {shown + 1, skipped}
+    else
+      {:error, reason} ->
+        IO.puts("  ERROR: #{reason}")
+        IO.puts("  Skipping — run: python3 tools/check_hardware.py --reset")
+        {shown, skipped + 1}
     end
+  end)
 
-  :ok = Papyrus.Display.display(display, display_buffer)
-  IO.puts("  Displayed. Waiting #{div(delay_ms, 1000)}s...")
-  Process.sleep(delay_ms)
-end)
-
-IO.puts("\nSleeping display...")
+IO.puts("\nDone: #{shown} shown, #{skipped} skipped.")
+IO.puts("Sleeping display...")
 :ok = Papyrus.Display.sleep(display)
-IO.puts("Done.")
