@@ -47,7 +47,7 @@ IO.puts("Found #{length(images)} image(s)\n")
              # be interpreted as red ink by the display, making white areas appear red.
              :three_color -> buffer <> Papyrus.Bitmap.blank_red_plane(spec)
              _ -> buffer
-           end,
+           end
          :ok <- Papyrus.Display.display(display, display_buffer) do
       IO.puts("  Displayed. Waiting #{div(delay_ms, 1000)}s...")
       Process.sleep(delay_ms)
