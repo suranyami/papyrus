@@ -39,15 +39,7 @@ IO.puts("Found #{length(images)} image(s)\n")
 
     with {:ok, buffer} <- Papyrus.Bitmap.from_image(path, spec),
          IO.puts("  Buffer: #{byte_size(buffer)} bytes"),
-         display_buffer =
-           case spec.color_mode do
-             # For :three_color displays, from_image/2 returns the black plane only.
-             # The red plane must be all-zero (no-red): 0x00 means "no red ink" on the
-             # hardware. Never duplicate the black plane — its 0xFF (white) bytes would
-             # be interpreted as red ink by the display, making white areas appear red.
-             :three_color -> buffer <> Papyrus.Bitmap.blank_red_plane(spec)
-             _ -> buffer
-           end
+         display_buffer <- buffer <> Papyrus.Bitmap.blank_red_plane(spec),
          :ok <- Papyrus.Display.display(display, display_buffer) do
       IO.puts("  Displayed. Waiting #{div(delay_ms, 1000)}s...")
       Process.sleep(delay_ms)
