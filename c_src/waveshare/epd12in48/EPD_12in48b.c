@@ -12,12 +12,23 @@
 *   - EPD_M1_ReadBusy: while(0) corrected to while(busy)
 *   - EPD_M1_ReadTemperature: printf changed to fprintf(stderr) to avoid
 *     corrupting the Erlang port protocol pipe on stdout
+*   - All ReadBusy functions: added BUSY_TIMEOUT_MS deadline to prevent
+*     infinite spin when a panel BUSY pin does not clear (e.g. cold boot,
+*     prior run crashed mid-refresh). Returns -1 on timeout so callers
+*     can propagate a meaningful error rather than hanging indefinitely.
 ******************************************************************************/
 #include "EPD_12in48b.h"
 #include "Debug.h"
 #include <stdio.h>
+#include <time.h>
 
 extern int Version;
+
+/* Maximum time (ms) to wait for any panel BUSY pin to de-assert.
+ * A full display refresh on the 12.48" panel takes up to ~20 seconds.
+ * 25 seconds leaves headroom below the 30-second Elixir-side timeout
+ * so we get a descriptive error rather than a generic timeout. */
+#define BUSY_TIMEOUT_MS 25000
 
 static void EPD_Reset(void);
 static void EPD_M1_SendCommand(UBYTE Reg);
@@ -31,14 +42,16 @@ static void EPD_S2_SendData(UBYTE Data);
 static void EPD_M1M2_SendCommand(UBYTE Reg);
 static void EPD_M1S1M2S2_SendCommand(UBYTE Reg);
 static void EPD_M1S1M2S2_SendData(UBYTE Data);
-static void EPD_M1_ReadBusy(void);
-static void EPD_M2_ReadBusy(void);
-static void EPD_S1_ReadBusy(void);
-static void EPD_S2_ReadBusy(void);
-static void EPD_M1_ReadTemperature(void);
+/* Return 0 if busy clears within BUSY_TIMEOUT_MS, -1 on timeout */
+static int EPD_M1_ReadBusy(void);
+static int EPD_M2_ReadBusy(void);
+static int EPD_S1_ReadBusy(void);
+static int EPD_S2_ReadBusy(void);
+/* Returns 0 on success, -1 if M1 busy timed out during temperature read */
+static int EPD_M1_ReadTemperature(void);
 static void EPD_SetLut(void);
 
-UBYTE EPD_12in48B_Init(void)
+int EPD_12in48B_Init(void)
 {
     DEV_Digital_Write(EPD_M1_CS_PIN, 1);
     DEV_Digital_Write(EPD_S1_CS_PIN, 1);
@@ -177,12 +190,14 @@ UBYTE EPD_12in48B_Init(void)
         EPD_M1S1M2S2_SendCommand(0xE3);
         EPD_M1S1M2S2_SendData(0x00);
 
-        EPD_M1_ReadTemperature();
+        if (EPD_M1_ReadTemperature() != 0) {
+            return -1;
+        }
     }
     return 0;
 }
 
-void EPD_12in48B_Clear(void)
+int EPD_12in48B_Clear(void)
 {
     UWORD y, x;
 
@@ -226,10 +241,10 @@ void EPD_12in48B_Clear(void)
         for(x = 0; x < 81; x++)
             EPD_S2_SendData(0x00);
 
-    EPD_12in48B_TurnOnDisplay();
+    return EPD_12in48B_TurnOnDisplay();
 }
 
-void EPD_12in48B_Display(const UBYTE *BlackImage, const UBYTE *RedImage)
+int EPD_12in48B_Display(const UBYTE *BlackImage, const UBYTE *RedImage)
 {
     int x, y;
 
@@ -273,18 +288,19 @@ void EPD_12in48B_Display(const UBYTE *BlackImage, const UBYTE *RedImage)
         for(x = 0; x < 81; x++)
             EPD_M1_SendData(*(RedImage + (y*163 + x)));
 
-    EPD_12in48B_TurnOnDisplay();
+    return EPD_12in48B_TurnOnDisplay();
 }
 
-void EPD_12in48B_TurnOnDisplay(void)
+int EPD_12in48B_TurnOnDisplay(void)
 {
     EPD_M1M2_SendCommand(0x04);  // power on
     DEV_Delay_ms(300);
     EPD_M1S1M2S2_SendCommand(0x12);  // display refresh
-    EPD_M1_ReadBusy();
-    EPD_S1_ReadBusy();
-    EPD_M2_ReadBusy();
-    EPD_S2_ReadBusy();
+    if (EPD_M1_ReadBusy() != 0) return -1;
+    if (EPD_S1_ReadBusy() != 0) return -1;
+    if (EPD_M2_ReadBusy() != 0) return -1;
+    if (EPD_S2_ReadBusy() != 0) return -1;
+    return 0;
 }
 
 void EPD_12in48B_Sleep(void)
@@ -404,57 +420,92 @@ static void EPD_M1S1M2S2_SendData(UBYTE Data)
     DEV_Digital_Write(EPD_S2_CS_PIN, 1);
 }
 
-/* FIX: reference code had while(0) here — corrected to while(busy) */
-static void EPD_M1_ReadBusy(void)
+/* Helper: current time in milliseconds (monotonic) */
+static long now_ms(void)
+{
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return (long)(ts.tv_sec * 1000L + ts.tv_nsec / 1000000L);
+}
+
+/* FIX: reference code had while(0) here — corrected to while(busy).
+ * FIX: added BUSY_TIMEOUT_MS deadline to prevent unbounded spin. */
+static int EPD_M1_ReadBusy(void)
 {
     UBYTE busy;
+    long deadline = now_ms() + BUSY_TIMEOUT_MS;
     do {
         EPD_M1_SendCommand(0x71);
         busy = DEV_Digital_Read(EPD_M1_BUSY_PIN);
         busy = !(busy & 0x01);
+        if (busy && now_ms() >= deadline) {
+            fprintf(stderr, "EPD_M1_ReadBusy: BUSY pin did not clear within %dms\n", BUSY_TIMEOUT_MS);
+            return -1;
+        }
     } while(busy);
     Debug("M1 Busy free\r\n");
     DEV_Delay_ms(200);
+    return 0;
 }
-static void EPD_M2_ReadBusy(void)
+static int EPD_M2_ReadBusy(void)
 {
     UBYTE busy;
+    long deadline = now_ms() + BUSY_TIMEOUT_MS;
     do {
         EPD_M2_SendCommand(0x71);
         busy = DEV_Digital_Read(EPD_M2_BUSY_PIN);
         busy = !(busy & 0x01);
+        if (busy && now_ms() >= deadline) {
+            fprintf(stderr, "EPD_M2_ReadBusy: BUSY pin did not clear within %dms\n", BUSY_TIMEOUT_MS);
+            return -1;
+        }
     } while(busy);
     Debug("M2 Busy free\r\n");
     DEV_Delay_ms(200);
+    return 0;
 }
-static void EPD_S1_ReadBusy(void)
+static int EPD_S1_ReadBusy(void)
 {
     UBYTE busy;
+    long deadline = now_ms() + BUSY_TIMEOUT_MS;
     do {
         EPD_S1_SendCommand(0x71);
         busy = DEV_Digital_Read(EPD_S1_BUSY_PIN);
         busy = !(busy & 0x01);
+        if (busy && now_ms() >= deadline) {
+            fprintf(stderr, "EPD_S1_ReadBusy: BUSY pin did not clear within %dms\n", BUSY_TIMEOUT_MS);
+            return -1;
+        }
     } while(busy);
     Debug("S1 Busy free\r\n");
     DEV_Delay_ms(200);
+    return 0;
 }
-static void EPD_S2_ReadBusy(void)
+static int EPD_S2_ReadBusy(void)
 {
     UBYTE busy;
+    long deadline = now_ms() + BUSY_TIMEOUT_MS;
     do {
         EPD_S2_SendCommand(0x71);
         busy = DEV_Digital_Read(EPD_S2_BUSY_PIN);
         busy = !(busy & 0x01);
+        if (busy && now_ms() >= deadline) {
+            fprintf(stderr, "EPD_S2_ReadBusy: BUSY pin did not clear within %dms\n", BUSY_TIMEOUT_MS);
+            return -1;
+        }
     } while(busy);
     Debug("S2 Busy free\r\n");
     DEV_Delay_ms(200);
+    return 0;
 }
 
 /* FIX: printf changed to fprintf(stderr) — stdout is the Erlang port pipe */
-static void EPD_M1_ReadTemperature(void)
+static int EPD_M1_ReadTemperature(void)
 {
     EPD_M1_SendCommand(0x40);
-    EPD_M1_ReadBusy();
+    if (EPD_M1_ReadBusy() != 0) {
+        return -1;
+    }
     DEV_Delay_ms(300);
 
     DEV_Digital_Write(EPD_M1_CS_PIN, 0);
@@ -472,6 +523,7 @@ static void EPD_M1_ReadTemperature(void)
     EPD_M1S1M2S2_SendData(0x03);
     EPD_M1S1M2S2_SendCommand(0xe5);
     EPD_M1S1M2S2_SendData(temp);
+    return 0;
 }
 
 static unsigned char lut_vcom1[] = {

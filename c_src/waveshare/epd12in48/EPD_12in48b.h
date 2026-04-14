@@ -35,10 +35,12 @@
 #define EPD_12in48B_MAX_WIDTH       1304
 #define EPD_12in48B_MAX_HEIGHT      984
 
-UBYTE EPD_12in48B_Init(void);
-void EPD_12in48B_Clear(void);
-void EPD_12in48B_Display(const UBYTE *BlackImage, const UBYTE *RedImage);
-void EPD_12in48B_TurnOnDisplay(void);
+/* All functions return 0 on success, -1 on error (busy timeout or hardware failure).
+ * The caller (epd_port.c) converts -1 to send_error() with a descriptive message. */
+int EPD_12in48B_Init(void);
+int EPD_12in48B_Clear(void);
+int EPD_12in48B_Display(const UBYTE *BlackImage, const UBYTE *RedImage);
+int EPD_12in48B_TurnOnDisplay(void);
 void EPD_12in48B_Sleep(void);
 
 #endif

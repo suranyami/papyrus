@@ -176,7 +176,10 @@ defmodule Papyrus.Display do
            "check GPIO permissions (is the user in the gpio group?) and display wiring"}
     after
       30_000 ->
-        {:error, "epd_port timed out after 30s waiting for #{cmd} response"}
+        {:error,
+         "epd_port timed out after 30s waiting for #{cmd} response — " <>
+           "the C port process is unresponsive (possible hardware hang on a BUSY pin; " <>
+           "check display wiring and GPIO permissions)"}
     end
   end
 

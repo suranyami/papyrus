@@ -6,7 +6,7 @@
 CC ?= gcc
 CFLAGS ?= -O2 -Wall -Wextra
 CFLAGS += -I waveshare/epd12in48
-LDFLAGS += -llgpio
+LDFLAGS += -llgpio -lrt
 
 # elixir_make sets MIX_APP_PATH; PRIV_DIR falls back for manual builds
 PRIV_DIR ?= $(MIX_APP_PATH)/priv

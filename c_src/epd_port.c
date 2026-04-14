@@ -165,7 +165,8 @@ int main(void) {
                 if (EPD_12in48B_Init() == 0) {
                     send_ok("ok");
                 } else {
-                    send_error("EPD_12in48B_Init failed");
+                    send_error("EPD_12in48B_Init failed: panel BUSY pin did not clear — "
+                               "check display wiring and ensure no previous refresh is still running");
                 }
                 break;
 
@@ -174,13 +175,19 @@ int main(void) {
                     send_error("display: expected 2 x plane_size bytes (black + red planes)");
                     break;
                 }
-                EPD_12in48B_Display(image_buf, image_buf + PLANE_SIZE);
-                send_ok("ok");
+                if (EPD_12in48B_Display(image_buf, image_buf + PLANE_SIZE) == 0) {
+                    send_ok("ok");
+                } else {
+                    send_error("EPD_12in48B_Display failed: panel BUSY pin did not clear during refresh");
+                }
                 break;
 
             case CMD_CLEAR:
-                EPD_12in48B_Clear();
-                send_ok("ok");
+                if (EPD_12in48B_Clear() == 0) {
+                    send_ok("ok");
+                } else {
+                    send_error("EPD_12in48B_Clear failed: panel BUSY pin did not clear during refresh");
+                }
                 break;
 
             case CMD_SLEEP:
