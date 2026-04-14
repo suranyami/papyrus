@@ -126,6 +126,15 @@ def check_pins(lgpio, h):
     else:
         print(f"\n  {OK}  All panels ready.")
 
+    # Check CS pins for stuck-LOW (panel locked in selected state)
+    section("CS pins (should be HIGH = deselected when idle)")
+    for name in CS_PINS:
+        pin = PINS[name]
+        lgpio.gpio_claim_input(h, 0, pin)
+        val = lgpio.gpio_read(h, pin)
+        state = "HIGH (idle)" if val else "LOW — panel locked selected!"
+        check(f"GPIO {pin:2d}  {name}", val == 1, state)
+
     return all_ok, busy_states
 
 # ---------------------------------------------------------------------------
@@ -190,13 +199,36 @@ def summary(busy_states, do_reset):
         print("       3. Try a power cycle — power-cycle the display, not just the Pi")
     else:
         if do_reset:
-            print(f"  {WARN}  Panels were busy; RST pulse sent.")
-            print("       Check above whether BUSY cleared after reset.")
-            print("       If still BUSY after reset: power-cycle the display.")
+            still_stuck = stuck  # already post-reset
+            if still_stuck:
+                print(f"\n  {FAIL}  {', '.join(still_stuck)} still BUSY after RST pulse.")
+                _print_physical_guidance(still_stuck)
+            else:
+                print(f"\n  {OK}  All panels ready after reset.")
         else:
             print(f"  {FAIL}  Panels are stuck BUSY: {', '.join(stuck)}")
             print("       Run again with --reset to send a hardware reset pulse.")
             print("       If that doesn't help: power-cycle the display.")
+
+def _print_physical_guidance(stuck):
+    # Map BUSY pin names to their panel's physical location and ribbon cable
+    panel_info = {
+        "M1_BUSY": ("M1", "left-half master",  "M1S1_RST (GPIO  6)", "M1_CS  (GPIO  8)"),
+        "S1_BUSY": ("S1", "left-half slave",   "M1S1_RST (GPIO  6)", "S1_CS  (GPIO  7)"),
+        "M2_BUSY": ("M2", "right-half master", "M2S2_RST (GPIO 23)", "M2_CS  (GPIO 17)"),
+        "S2_BUSY": ("S2", "right-half slave",  "M2S2_RST (GPIO 23)", "S2_CS  (GPIO 18)"),
+    }
+    for name in stuck:
+        panel, location, rst, cs = panel_info[name]
+        print(f"\n  Panel {panel} ({location}) — BUSY pin stuck HIGH after RST:")
+        print(f"    RST shared with: {rst}")
+        print(f"    CS pin:          {cs}")
+        print( "    Physical checks:")
+        print(f"    1. Reseat the ribbon cable connecting to the {panel} board")
+        print(f"       (slaves connect to their master via a short FPC ribbon)")
+        print(f"    2. Check {panel} board power — feel for warmth, look for damage")
+        print(f"    3. Check CS pin above — if LOW, the panel is stuck selected")
+        print( "    4. Power-cycle the entire display (cut 5V, wait 10s, restore)")
 
 # ---------------------------------------------------------------------------
 # Entry point
