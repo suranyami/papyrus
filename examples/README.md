@@ -96,7 +96,17 @@ python3 tools/check_hardware.py
 python3 tools/check_hardware.py --reset
 ```
 
-Requires `lgpio` (the same library the C driver uses): `pip install lgpio`
+Requires `lgpio` (the same library the C driver uses):
+
+```sh
+# Preferred — use the Debian package (Raspberry Pi OS Bookworm+)
+sudo apt install python3-lgpio
+
+# Fallback — venv (if the apt package is unavailable)
+python3 -m venv venv --system-site-packages
+source venv/bin/activate
+pip install lgpio
+```
 
 The script checks:
 - `lgpio` installed and importable

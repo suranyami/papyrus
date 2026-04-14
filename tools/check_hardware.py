@@ -10,7 +10,8 @@ Usage:
     python3 tools/check_hardware.py --reset   # also pulse RST lines to wake a stuck display
 
 Requirements:
-    pip install lgpio          # same library the C driver uses
+    sudo apt install python3-lgpio          # preferred (Raspberry Pi OS Bookworm+)
+    # or: python3 -m venv venv --system-site-packages && source venv/bin/activate && pip install lgpio
 """
 
 import sys
@@ -80,7 +81,7 @@ def open_gpio(lgpio):
     section("GPIO chip")
     # Pi 5 uses gpiochip4, earlier Pis use gpiochip0
     for chip in (4, 0):
-        h = lgpio.gpiochipOpen(chip)
+        h = lgpio.gpiochip_open(chip)
         if h >= 0:
             check(f"gpiochip{chip} opened", True)
             return h, chip
@@ -101,7 +102,7 @@ def check_pins(lgpio, h):
     all_ok = True
     for name in OUTPUT_PINS:
         pin = PINS[name]
-        rc = lgpio.gpioClaimOutput(h, 0, pin, 0)
+        rc = lgpio.gpio_claim_output(h, 0, pin, 0)
         ok = rc == 0
         check(f"GPIO {pin:2d}  {name}", ok, f"rc={rc}" if not ok else "")
         all_ok = all_ok and ok
@@ -110,8 +111,8 @@ def check_pins(lgpio, h):
     busy_states = {}
     for name in BUSY_PINS:
         pin = PINS[name]
-        lgpio.gpioClaimInput(h, 0, pin)
-        val = lgpio.gpioRead(h, pin)
+        lgpio.gpio_claim_input(h, 0, pin)
+        val = lgpio.gpio_read(h, pin)
         state = "BUSY (HIGH)" if val else "ready (LOW)"
         ok = val == 0
         check(f"GPIO {pin:2d}  {name}", ok, state)
@@ -135,12 +136,12 @@ def reset_display(lgpio, h):
     section("RST pulse (hardware reset)")
     for name in RST_PINS:
         pin = PINS[name]
-        lgpio.gpioWrite(h, pin, 0)
+        lgpio.gpio_write(h, pin, 0)
     print(f"  {INFO}  RST lines LOW — holding 200ms...")
     time.sleep(0.2)
     for name in RST_PINS:
         pin = PINS[name]
-        lgpio.gpioWrite(h, pin, 1)
+        lgpio.gpio_write(h, pin, 1)
     print(f"  {INFO}  RST lines HIGH — waiting 2s for panels to boot...")
     time.sleep(2.0)
 
@@ -148,7 +149,7 @@ def reset_display(lgpio, h):
     print()
     for name in BUSY_PINS:
         pin = PINS[name]
-        val = lgpio.gpioRead(h, pin)
+        val = lgpio.gpio_read(h, pin)
         state = "BUSY (HIGH)" if val else "ready (LOW)"
         check(f"GPIO {pin:2d}  {name} after reset", val == 0, state)
 
@@ -163,12 +164,12 @@ def check_spi_bit_bang(lgpio, h):
 
     errors = 0
     for bit in [0, 1, 0, 1]:
-        lgpio.gpioWrite(h, sck,  0)
-        lgpio.gpioWrite(h, mosi, bit)
+        lgpio.gpio_write(h, sck,  0)
+        lgpio.gpio_write(h, mosi, bit)
         time.sleep(0.001)
-        lgpio.gpioWrite(h, sck,  1)
+        lgpio.gpio_write(h, sck,  1)
         time.sleep(0.001)
-        lgpio.gpioWrite(h, sck,  0)
+        lgpio.gpio_write(h, sck,  0)
 
     check("SCK/MOSI toggles without error", errors == 0)
     print(f"  {INFO}  Note: without a loopback wire you can't confirm the signal reaches")
@@ -228,7 +229,7 @@ def main():
         summary(busy_states, args.reset)
 
     finally:
-        lgpio.gpiochipClose(h)
+        lgpio.gpiochip_close(h)
         print(f"\n  {INFO}  GPIO chip closed cleanly.\n")
 
 if __name__ == "__main__":
