@@ -84,6 +84,38 @@ For best results, use high-contrast images with clean black-on-white content.
 
 ---
 
+## Hardware diagnostics
+
+If examples fail to start (timeout, GPIO errors, no display response), run the hardware diagnostic first — it checks each layer without needing Elixir or the compiled C port:
+
+```sh
+# Read-only check — BUSY pin states, GPIO access, SPI toggle
+python3 tools/check_hardware.py
+
+# Also pulse RST to wake a display stuck mid-refresh
+python3 tools/check_hardware.py --reset
+```
+
+Requires `lgpio` (the same library the C driver uses): `pip install lgpio`
+
+The script checks:
+- `lgpio` installed and importable
+- `gpiochip0` / `gpiochip4` accessible (Pi 4 vs Pi 5)
+- All 14 GPIO pins claimable as output/input
+- All 4 BUSY pins — `LOW` = ready, `HIGH` = display still refreshing
+- SCK/MOSI toggle without errors
+
+**Common fixes based on output:**
+
+| Symptom | Likely cause | Fix |
+|---------|-------------|-----|
+| `gpiochip0 Export Failed` | Permission denied | Run as root or add user to `gpio` group |
+| One or more BUSY pins HIGH | Prior run crashed mid-refresh | Run with `--reset` or power-cycle the display |
+| All BUSY pins HIGH after `--reset` | Hardware not powered | Check display power supply and ribbon cables |
+| GPIO claims fail | Another process holds the chip | `lsof \| grep gpiochip` and kill the stale process |
+
+---
+
 ## Three-color displays (black + red + white)
 
 If your display has a red ink channel (e.g. Waveshare 12.48" B), the display buffer is two planes concatenated: `black_plane <> red_plane`. The red plane uses **inverted encoding** from the black plane:
