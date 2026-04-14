@@ -27,10 +27,11 @@ pattern = Papyrus.TestPattern.checkerboard(spec)
 
 # Waveshare12in48 is a :three_color display — Display.display/2 expects
 # 2 * buffer_size bytes (black plane + red plane concatenated).
-# Since we only have a B&W pattern, duplicate it for both planes.
+# The red plane must be all-zero (no red ink). Never duplicate the black plane:
+# 0xFF (white) bytes in the red plane are interpreted as red ink by the hardware.
 buffer =
   case spec.color_mode do
-    :three_color -> pattern <> pattern
+    :three_color -> pattern <> Papyrus.Bitmap.blank_red_plane(spec)
     _ -> pattern
   end
 
@@ -44,7 +45,7 @@ white = Papyrus.TestPattern.full_white(spec)
 
 clear_buffer =
   case spec.color_mode do
-    :three_color -> white <> white
+    :three_color -> white <> Papyrus.Bitmap.blank_red_plane(spec)
     _ -> white
   end
 

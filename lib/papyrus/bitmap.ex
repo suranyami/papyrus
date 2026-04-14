@@ -26,6 +26,34 @@ defmodule Papyrus.Bitmap do
   def blank(%DisplaySpec{bit_order: :white_low, buffer_size: size}),
     do: :binary.copy(<<0x00>>, size)
 
+  @doc """
+  Return a blank (no-red) red plane buffer for a three-colour display.
+
+  For Waveshare three-colour ePaper panels (black/white/red), the red plane
+  uses the **opposite** encoding from the black plane:
+
+  - Black plane (`:white_high`): `0xFF` = white, `0x00` = black
+  - Red plane: `0x00` = no red (transparent), `0xFF` = red ink
+
+  When constructing a two-plane buffer for a `:three_color` display, pass the
+  result of `from_image/2` as the black plane and this function as the red
+  plane. **Never duplicate the black plane for both planes** — doing so sends
+  `0xFF` (white) bytes to the red plane, which the hardware interprets as red
+  ink, causing white areas of the image to appear red on the display.
+
+  ## Example
+
+      {:ok, black_plane} = Papyrus.Bitmap.from_image("image.png", spec)
+      red_plane = Papyrus.Bitmap.blank_red_plane(spec)
+      display_buffer = black_plane <> red_plane
+      :ok = Papyrus.Display.display(display, display_buffer)
+
+  @since "0.2.0"
+  """
+  @spec blank_red_plane(DisplaySpec.t()) :: binary()
+  def blank_red_plane(%DisplaySpec{buffer_size: size}),
+    do: :binary.copy(<<0x00>>, size)
+
   @doc "Convert an image file to a packed 1-bit ePaper binary buffer."
   @spec from_image(String.t(), DisplaySpec.t()) :: {:ok, binary()} | {:error, atom()}
   def from_image(path, spec), do: from_image(path, spec, [])

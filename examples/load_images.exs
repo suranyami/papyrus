@@ -38,11 +38,13 @@ Enum.each(images, fn path ->
   {:ok, buffer} = Papyrus.Bitmap.from_image(path, spec)
   IO.puts("  Buffer: #{byte_size(buffer)} bytes")
 
-  # For :three_color displays, from_image/2 returns a single-plane B&W buffer.
-  # Duplicate it as both black and red planes.
+  # For :three_color displays, from_image/2 returns the black plane only.
+  # The red plane must be all-zero (no-red): 0x00 means "no red ink" on the
+  # hardware. Never duplicate the black plane — its 0xFF (white) bytes would
+  # be interpreted as red ink by the display, making white areas appear red.
   display_buffer =
     case spec.color_mode do
-      :three_color -> buffer <> buffer
+      :three_color -> buffer <> Papyrus.Bitmap.blank_red_plane(spec)
       _ -> buffer
     end
 

@@ -29,11 +29,13 @@ defmodule Papyrus.Hardware.BitmapRenderTest do
       {:ok, buffer} = Papyrus.Bitmap.from_image(path, spec)
       IO.puts("  Buffer: #{byte_size(buffer)} bytes")
 
-      # For :three_color displays, from_image/2 returns a single B&W plane.
-      # Duplicate it to satisfy the two-plane (black + red) requirement.
+      # For :three_color displays, from_image/2 returns the black plane only.
+      # The red plane must be all-zero (no red ink). 0x00 = no red on hardware.
+      # Never duplicate the black plane: 0xFF (white) bytes in the red plane
+      # are interpreted as red ink, causing white areas to appear red.
       display_buffer =
         case spec.color_mode do
-          :three_color -> buffer <> buffer
+          :three_color -> buffer <> Papyrus.Bitmap.blank_red_plane(spec)
           _ -> buffer
         end
 
@@ -50,7 +52,7 @@ defmodule Papyrus.Hardware.BitmapRenderTest do
 
     display_buffer =
       case spec.color_mode do
-        :three_color -> pattern <> pattern
+        :three_color -> pattern <> Papyrus.Bitmap.blank_red_plane(spec)
         _ -> pattern
       end
 

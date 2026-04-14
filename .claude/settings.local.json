@@ -41,7 +41,9 @@
       "Bash(open test_pattern_exports/simple_message.png)",
       "Bash(npm install:*)",
       "Bash(echo \"Exit code: $?\")",
-      "Bash(npm list:*)"
+      "Bash(npm list:*)",
+      "Bash(GIT_SSH_COMMAND=\"ssh -o ControlMaster=no\" git commit -m \"feat\\(test_pattern\\): add display convenience module and Mix task\")",
+      "Skill(gsd:debug)"
     ]
   }
 }

@@ -53,6 +53,31 @@ defmodule Papyrus.BitmapTest do
     end
   end
 
+  describe "blank_red_plane/1" do
+    test "returns all-zero binary of spec.buffer_size bytes" do
+      spec = test_spec(width: 16, height: 16, bit_order: :white_high)
+      buf = Papyrus.Bitmap.blank_red_plane(spec)
+      assert byte_size(buf) == spec.buffer_size
+      assert buf == :binary.copy(<<0x00>>, spec.buffer_size)
+    end
+
+    test "is all-zero regardless of bit_order (red plane encoding is fixed)" do
+      spec_high = test_spec(width: 8, height: 8, bit_order: :white_high)
+      spec_low = test_spec(width: 8, height: 8, bit_order: :white_low)
+      assert Papyrus.Bitmap.blank_red_plane(spec_high) == :binary.copy(<<0x00>>, spec_high.buffer_size)
+      assert Papyrus.Bitmap.blank_red_plane(spec_low) == :binary.copy(<<0x00>>, spec_low.buffer_size)
+    end
+
+    test "is NOT the same as blank/1 for :white_high display" do
+      # This test documents the critical encoding difference:
+      # blank/1 returns 0xFF (white in black-plane encoding)
+      # blank_red_plane/1 returns 0x00 (no-red in red-plane encoding)
+      # Using blank/1 as a red plane would make the entire display show red ink.
+      spec = test_spec(width: 8, height: 8, bit_order: :white_high)
+      refute Papyrus.Bitmap.blank(spec) == Papyrus.Bitmap.blank_red_plane(spec)
+    end
+  end
+
   describe "StbLoader" do
     test "loads PNG as grayscale returning {:ok, %StbImage{}}" do
       {:ok, img} = Papyrus.Bitmap.StbLoader.load(fixture_path("white_4x8.png"))
