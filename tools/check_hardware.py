@@ -102,7 +102,9 @@ def check_pins(lgpio, h):
     all_ok = True
     for name in OUTPUT_PINS:
         pin = PINS[name]
-        rc = lgpio.gpio_claim_output(h, 0, pin, 0)
+        # CS pins idle HIGH (deselected); all other output pins start LOW
+        initial_value = 1 if name in CS_PINS else 0
+        rc = lgpio.gpio_claim_output(h, 0, pin, initial_value)
         ok = rc == 0
         check(f"GPIO {pin:2d}  {name}", ok, f"rc={rc}" if not ok else "")
         all_ok = all_ok and ok
@@ -126,13 +128,15 @@ def check_pins(lgpio, h):
     else:
         print(f"\n  {OK}  All panels ready.")
 
-    # Check CS pins for stuck-LOW (panel locked in selected state)
+    # Check CS pins for stuck-LOW (panel locked in selected state).
+    # These are already claimed as outputs above — read directly, no re-claim needed.
     section("CS pins (should be HIGH = deselected when idle)")
     for name in CS_PINS:
         pin = PINS[name]
-        lgpio.gpio_claim_input(h, 0, pin)
+        # Drive HIGH (idle/deselected), then read back to confirm
+        lgpio.gpio_write(h, pin, 1)
         val = lgpio.gpio_read(h, pin)
-        state = "HIGH (idle)" if val else "LOW — panel locked selected!"
+        state = "HIGH (idle)" if val else "LOW — stuck selected!"
         check(f"GPIO {pin:2d}  {name}", val == 1, state)
 
     return all_ok, busy_states
